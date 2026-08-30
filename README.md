@@ -1,6 +1,6 @@
 # Alignment — measuring whether an AI grader agrees for the *right reason*
 
-> **Live demo:** LIVE_URL_HERE — real ASAP essays pre-graded against a learned
+> **Live demo:** **https://markalign.up.railway.app** — real ASAP essays pre-graded against a learned
 > teacher standard; paste any essay to grade it live.
 
 The hard problem in AI assessment isn't producing a score. Anything can output a
