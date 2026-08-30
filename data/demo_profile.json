@@ -1,0 +1,79 @@
+{
+  "grader_id": "teacher-A",
+  "set_id": "asap-set-7",
+  "rewards": [
+    {
+      "pattern": "Develops one specific patience experience as a sequence of concrete events rather than explaining patience in general.",
+      "evidence": "The essays scoring 10, 11, and 12 each center on a recognizable event with actions, obstacles, waiting, and an outcome. The essays scoring 4 and below mostly give definitions, general claims, or several confusing fragments instead of one developed incident.",
+      "strength": "strong"
+    },
+    {
+      "pattern": "Shows patience through a visible problem or period of waiting, followed by a clear result.",
+      "evidence": "The 12-scoring essay shows the writer hiding and waiting while being hunted in paintball; the 11-scoring essay shows waiting in the concert-ticket line; the 10-scoring essay shows repeatedly calming a difficult child. The 8-scoring essay also makes the waiting for dinner concrete, while the essays scoring 6 and below usually assert that the writer is patient without showing a sustained challenge and resolution.",
+      "strength": "strong"
+    },
+    {
+      "pattern": "Uses specific sensory or situational details that make the patience experience easy to picture.",
+      "evidence": "The high-scoring essays include details such as breathing hard behind a thin tree, a long ticket line, shouting preschoolers, a child who cannot sit still, and food being smelled while it cooks. The essays scoring 4 and below rely mainly on abstract statements or vague references, with little concrete scene detail.",
+      "strength": "strong"
+    },
+    {
+      "pattern": "Keeps the narrative focused on the assigned experience and ends by stating or demonstrating what happened because of the patience.",
+      "evidence": "The 12-scoring essay ends with winning, the 10-scoring essay ends with the child behaving and greeting the writer, and the 8-scoring essay ends with the meal. Even the 11-scoring essay, despite its failed outcome, stays focused on the long wait. The essays scoring 6 and below drift into claims about being naturally patient or general definitions instead of completing one focused story.",
+      "strength": "moderate"
+    }
+  ],
+  "penalizes": [
+    {
+      "pattern": "Answers the topic with a definition or general discussion of patience instead of telling a story.",
+      "evidence": "The essays scoring 7, 6, 4, and below spend substantial space explaining what patience means, claiming the writer is patient, or listing hypothetical situations. In contrast, every essay scoring 8 or higher presents a concrete personal episode.",
+      "strength": "strong"
+    },
+    {
+      "pattern": "Leaves the reader to infer the connection between events and patience instead of showing the waiting, frustration, or self-control directly.",
+      "evidence": "The essays scoring 6 and below repeatedly say things such as being patient, being born with patience, or waiting for a birthday without developing the emotional or behavioral struggle. The 8-to-12 essays show what the writer did while waiting or resisting frustration.",
+      "strength": "strong"
+    },
+    {
+      "pattern": "Uses confusing sequencing, incomplete sentences, or unclear references that prevent the event from being reconstructed.",
+      "evidence": "The essays scoring 2 and 3 contain heavily fragmented or contradictory accounts, and the essay scoring 4 moves between examples without a single narrative. The high-scoring essays have recognizable beginnings, developments, and endings even when they contain spelling and grammar errors.",
+      "strength": "strong"
+    },
+    {
+      "pattern": "Allows frequent convention errors to interfere with readability, but does not appear to require standard correctness for a high mark.",
+      "evidence": "The essays scoring 2 and 3 contain errors severe enough to obscure meaning, whereas the essays scoring 10 through 12 remain understandable despite misspellings and punctuation problems. The 12-scoring essay itself includes errors such as 'camoflage,' missing spaces, and inconsistent punctuation, so conventions alone do not determine the top mark.",
+      "strength": "moderate"
+    }
+  ],
+  "severity": "balanced",
+  "trait_emphasis": {
+    "ideas": "high",
+    "organization": "high",
+    "style": "medium",
+    "conventions": "medium"
+  },
+  "notes": "This teacher strongly separates developed, concrete narratives from general explanations or unintelligible fragments. The teacher is relatively tolerant of ordinary spelling and punctuation errors when the story is focused and understandable, but severe breakdowns in clarity and sequencing sharply lower the mark; the sample is small, especially for isolating style from ideas and organization.",
+  "n_examples": 9,
+  "checklist": {
+    "ideas": [
+      "Does the essay communicate at least one understandable experience connected to patience?",
+      "Does it describe one specific, concrete event with a patience-related problem or period of waiting?",
+      "Does it develop the event with several relevant details, a clear struggle or choice, and a meaningful outcome?"
+    ],
+    "organization": [
+      "Can the reader identify a beginning situation, what happened next, and an ending?",
+      "Are the events mostly presented in a logical time order without major drifting into unrelated general statements?",
+      "Does the sequence build clearly from the patience challenge through the writer's response to a distinct resolution?"
+    ],
+    "style": [
+      "Is the essay understandable in ordinary sentences, despite some wording or grammar errors?",
+      "Does it use concrete action, sensory detail, or quoted speech rather than mostly abstract statements?",
+      "Does the writing sustain a distinct narrative voice with varied, vivid phrasing that makes the experience engaging?"
+    ],
+    "conventions": [
+      "Can a reader understand the sentences despite spelling, punctuation, and grammar mistakes?",
+      "Are most sentences and common words formed clearly enough that errors do not repeatedly interrupt reading?",
+      "Are grammar, usage, spelling, capitalization, and punctuation controlled consistently enough to make the polished narrative easy to read?"
+    ]
+  }
+}

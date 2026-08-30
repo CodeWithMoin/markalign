@@ -1,0 +1,266 @@
+{
+  "s7_17858": {
+    "essay_id": "s7_17858",
+    "grader_id": "teacher-A",
+    "trait_judgements": [
+      {
+        "trait": "ideas",
+        "score": 3,
+        "spans": [
+          {
+            "quote": "A time that I was patient was last year at cheer competition.",
+            "reason": "The essay clearly identifies an understandable experience connected to patience."
+          },
+          {
+            "quote": "We had to wait til all the teams were done.",
+            "reason": "It describes a specific competition and a clear period of waiting."
+          },
+          {
+            "quote": "We waited... and waited... and waited till finally he called are name. The junior varsity cheer leader! We took first in dance and fourth in cheer.",
+            "reason": "The event includes repeated waiting, a developing struggle, and a distinct outcome."
+          }
+        ]
+      },
+      {
+        "trait": "organization",
+        "score": 3,
+        "spans": [
+          {
+            "quote": "In the beginning of the day I was patient getting in line to get ready to perform.",
+            "reason": "The beginning situation is clearly established."
+          },
+          {
+            "quote": "After, we perfomed we went to watch the rest of the teams.",
+            "reason": "The events are presented in mostly logical time order."
+          },
+          {
+            "quote": "Once the teams were done they called all the squads to the mat it was award time.",
+            "reason": "The sequence moves clearly from waiting through the competition to the awards."
+          }
+        ]
+      },
+      {
+        "trait": "style",
+        "score": 2,
+        "spans": [
+          {
+            "quote": "The other teams were really good.",
+            "reason": "The writing is understandable in ordinary sentences despite some errors."
+          },
+          {
+            "quote": "All the teams sat down on the mat.",
+            "reason": "The essay uses concrete actions and a specific setting rather than only abstract statements."
+          }
+        ]
+      },
+      {
+        "trait": "conventions",
+        "score": 2,
+        "spans": [
+          {
+            "quote": "That day was a good day for me and I was very patient",
+            "reason": "The meaning remains understandable despite spelling, punctuation, and grammar mistakes."
+          },
+          {
+            "quote": "My team members were waiting patiently to see if we worn in cheer or in dance.",
+            "reason": "Most words and sentences are formed clearly enough for the reader to follow the story."
+          }
+        ]
+      }
+    ],
+    "holistic_score": 10,
+    "confidence": 0.91,
+    "abstained": false,
+    "summary": "The essay presents a focused and understandable patience narrative with clear sequencing and outcome, but its simple style and frequent convention errors keep it below the teacher's strongest level."
+  },
+  "s7_17965": {
+    "essay_id": "s7_17965",
+    "grader_id": "teacher-A",
+    "trait_judgements": [
+      {
+        "trait": "ideas",
+        "score": 2,
+        "spans": [
+          {
+            "quote": "To me patience means you stand or sit there quiet and with no rude comments.",
+            "reason": "The essay gives an understandable explanation of patience."
+          },
+          {
+            "quote": "When I was in the store my cousin was patience out an outfit and I was taking a long time.",
+            "reason": "This describes a concrete store situation involving a period of waiting."
+          }
+        ]
+      },
+      {
+        "trait": "organization",
+        "score": 1,
+        "spans": [
+          {
+            "quote": "The whole purpose of this writing is you have to be patience in life.",
+            "reason": "The writing has an opening explanation, several examples, and a recognizable concluding statement."
+          }
+        ]
+      },
+      {
+        "trait": "style",
+        "score": 2,
+        "spans": [
+          {
+            "quote": "I didn't get mad or made rude comments.",
+            "reason": "Most of the meaning can be understood in ordinary sentences despite grammar errors."
+          },
+          {
+            "quote": "I was in the store",
+            "reason": "The essay uses concrete settings and actions instead of only discussing patience abstractly."
+          }
+        ]
+      },
+      {
+        "trait": "conventions",
+        "score": 2,
+        "spans": [
+          {
+            "quote": "I didn't get mad or made rude comments.",
+            "reason": "The reader can generally understand the intended meaning despite errors."
+          },
+          {
+            "quote": "When my brother and I was in the shore he was buying a pair of shoes.",
+            "reason": "Most common words and sentences are recognizable enough to follow."
+          }
+        ]
+      }
+    ],
+    "holistic_score": 7,
+    "confidence": 0.86,
+    "abstained": false,
+    "summary": "The essay communicates the general idea of patience and gives several understandable examples, but it lacks the focused, developed narrative and controlled conventions this teacher rewards most strongly."
+  },
+  "s7_17883": {
+    "essay_id": "s7_17883",
+    "grader_id": "teacher-A",
+    "trait_judgements": [
+      {
+        "trait": "ideas",
+        "score": 3,
+        "spans": [
+          {
+            "quote": "this silck worm had a problem he was still to skiny to change",
+            "reason": "The essay communicates an understandable experience involving a worm waiting to change."
+          },
+          {
+            "quote": "It was becoming winter cut side, so every leave he found was brown & nasty.",
+            "reason": "The story presents a specific problem that makes the worm's growth and waiting difficult."
+          },
+          {
+            "quote": "But he wack up in seen that he was in a white silck wrapping so he repped out of it. In seen he was a moath after all",
+            "reason": "The event includes several concrete details, a struggle to find food, and an outcome."
+          }
+        ]
+      },
+      {
+        "trait": "organization",
+        "score": 2,
+        "spans": [
+          {
+            "quote": "Once their was a littel silck warm getting ready to change in to a butter fly month.",
+            "reason": "The reader can identify a beginning situation, subsequent difficulties, and an ending transformation."
+          },
+          {
+            "quote": "But then he got trained at eating die leaves & grass so he grow more & more unpatient",
+            "reason": "Despite wording errors, the events generally move forward in time from preparation to difficulty to change."
+          }
+        ]
+      },
+      {
+        "trait": "style",
+        "score": 2,
+        "spans": [
+          {
+            "quote": "He crold going bush to bush eating any green leave he could find.",
+            "reason": "The main action is understandable in ordinary sentence form despite substantial errors."
+          },
+          {
+            "quote": "he had to be nice & fat like a fat pratle stick cut in half.",
+            "reason": "The essay uses concrete imagery and physical actions rather than only abstract explanation."
+          }
+        ]
+      },
+      {
+        "trait": "conventions",
+        "score": 1,
+        "spans": [
+          {
+            "quote": "But he wanted to change in to a moath so bad",
+            "reason": "The sentence's meaning can still be understood despite spelling and grammar mistakes."
+          }
+        ]
+      }
+    ],
+    "holistic_score": 8,
+    "confidence": 0.88,
+    "abstained": false,
+    "summary": "The essay gives a concrete and imaginative patience-related story with a recognizable sequence, but frequent convention errors and unclear phrasing weaken its development, organization, and readability."
+  },
+  "s7_17873": {
+    "essay_id": "s7_17873",
+    "grader_id": "teacher-A",
+    "trait_judgements": [
+      {
+        "trait": "ideas",
+        "score": 2,
+        "spans": [
+          {
+            "quote": "I new I had to be patient.",
+            "reason": "The essay communicates an understandable experience involving patience during a long family trip."
+          },
+          {
+            "quote": "It was about a four hour drive.",
+            "reason": "The long drive creates a specific period of waiting connected to the patience problem."
+          }
+        ]
+      },
+      {
+        "trait": "organization",
+        "score": 1,
+        "spans": [
+          {
+            "quote": "A long time ago me and my family were going to a cottage we owned.",
+            "reason": "The essay presents a recognizable beginning, later events, and an ending."
+          }
+        ]
+      },
+      {
+        "trait": "style",
+        "score": 2,
+        "spans": [
+          {
+            "quote": "I was so happy I couldn't wait until we got there.",
+            "reason": "Despite wording and grammar errors, the sentences are generally understandable."
+          },
+          {
+            "quote": "But I wanted to get there so bad.",
+            "reason": "The essay uses concrete action and a clear emotional reaction to show the waiting."
+          }
+        ]
+      },
+      {
+        "trait": "conventions",
+        "score": 2,
+        "spans": [
+          {
+            "quote": "I kept complaining that it was taking to long.",
+            "reason": "The spelling and grammar error does not prevent the sentence from being understood."
+          },
+          {
+            "quote": "Then when we got home later on that hight I got my phone taken away for a week",
+            "reason": "Most words and sentences remain clear enough to follow despite several ordinary errors."
+          }
+        ]
+      }
+    ],
+    "holistic_score": 7,
+    "confidence": 0.86,
+    "abstained": false,
+    "summary": "The essay gives an understandable but loosely organized patience experience, with some clear waiting and outcome, though limited development, general commentary, and frequent convention errors keep it below the teacher's strongest level."
+  }
+}

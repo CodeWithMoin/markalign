@@ -34,10 +34,20 @@ SUBS = [
 ]
 
 
+# The ASAP TSV is Windows-1252 read as latin-1: curly quotes/dashes arrive as
+# invisible control bytes (\x92 in "don\x92t" renders as "don t"). Map them back.
+CP1252 = {"\x91": "'", "\x92": "'", "\x93": '"', "\x94": '"',
+          "\x96": "-", "\x97": "-", "\x85": "..."}
+
+
 def clean(text: str) -> str:
+    for bad, good in CP1252.items():
+        text = text.replace(bad, good)
     for pat, rep in SUBS:
         text = re.sub(pat, rep, text)
-    return re.sub(r"\s+", " ", text.replace(" ,", ",")).strip()
+    text = re.sub(r"\s+([,.!?;:])", r"\1", text)      # ASAP tokenization: "turn ?" -> "turn?"
+    text = re.sub(r"\s+('s|n't|'re|'ve|'ll|'d|'m)\b", r"\1", text)  # "mom 's" -> "mom's"
+    return re.sub(r"\s+", " ", text).strip()
 
 
 def n_tokens(text: str) -> int:

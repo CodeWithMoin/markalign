@@ -21,6 +21,22 @@ from .grading_engine import grade
 from .abstention import apply_gate
 
 ROOT = Path(__file__).resolve().parent.parent
+
+
+def _load_dotenv(path: Path) -> None:
+    """Populate os.environ from a .env if present (provider url/key/model), so
+    `make demo-real` works without exporting anything. setdefault → shell wins.
+    Never prints values."""
+    if not path.exists():
+        return
+    for line in path.read_text().splitlines():
+        line = line.strip()
+        if line and not line.startswith("#") and "=" in line:
+            k, v = line.split("=", 1)
+            os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
+
+
+_load_dotenv(ROOT / ".env")
 MOCK = os.environ.get("EDEXIA_MOCK", "0") == "1"
 
 app = FastAPI(title="Edexia Alignment Demo")
@@ -88,10 +104,30 @@ _DEMO_ANCHORS = [_DEMO_ANCHORS[0], _DEMO_ANCHORS[len(_DEMO_ANCHORS) // 2], _DEMO
 _demo_cache: dict = {}
 
 
+_PROFILE_PATH = ROOT / "data" / "demo_profile.json"
+_GRADES_PATH = ROOT / "data" / "demo_grades.json"
+# sample grades, frozen to disk like the profile: a click on a preloaded essay
+# never spends a model call, and the grade never drifts between restarts.
+_GRADES: dict = (json.loads(_GRADES_PATH.read_text())
+                 if not MOCK and _GRADES_PATH.exists() else {})
+
+
 def _demo_profile():
-    """Learn the teacher's standard once from the fixture's calibration set, cached."""
+    """The teacher's standard, learned ONCE and frozen to disk. Rebuilding on every
+    restart re-rolls the model and the demo's grades drift — a vetted profile is a
+    versioned artifact, not a dice throw. Delete data/demo_profile.json to relearn."""
     if "profile" not in _demo_cache:
-        _demo_cache["profile"] = build_profile("teacher-A", DEMO_RUBRIC, _DEMO_EXAMPLES, mock=MOCK)
+        from .schemas import TeacherProfile
+        if not MOCK and _PROFILE_PATH.exists():
+            _demo_cache["profile"] = TeacherProfile(**json.loads(_PROFILE_PATH.read_text()))
+        else:
+            # checklist=True: per-trait yes/no ladders; the grading engine counts
+            # yeses — the format that scored QWK 0.656 in the eval.
+            prof = build_profile("teacher-A", DEMO_RUBRIC, _DEMO_EXAMPLES,
+                                 mock=MOCK, checklist=True)
+            if not MOCK:
+                _PROFILE_PATH.write_text(json.dumps(prof.model_dump(), indent=2))
+            _demo_cache["profile"] = prof
     return _demo_cache["profile"]
 
 
@@ -118,12 +154,21 @@ def demo():
 
 @app.post("/grade_own")
 def grade_own(req: OwnGrade):
-    """Grade any essay (a sample or a pasted one) against the preloaded teacher."""
+    """Grade any essay (a sample or a pasted one) against the preloaded teacher.
+    Sample essays are graded once and cached — a reload or shared link shows the
+    same grade instantly instead of re-rolling the model."""
+    human = next((s["human_holistic"] for s in DEMO["samples"] if s["essay_id"] == req.essay_id), None)
+    is_sample = req.essay_id is not None and human is not None
+    if is_sample and req.essay_id in _GRADES:
+        return {"result": _GRADES[req.essay_id], "human_holistic": human}
     prof = _demo_profile()
     essay = Essay(essay_id=req.essay_id or "live", set_id=DEMO_RUBRIC.set_id, text=req.essay_text)
     result = apply_gate(grade(essay, DEMO_RUBRIC, prof, anchors=_DEMO_ANCHORS, mock=MOCK), req.threshold)
-    human = next((s["human_holistic"] for s in DEMO["samples"] if s["essay_id"] == req.essay_id), None)
-    return {"result": result.model_dump(), "human_holistic": human}
+    out = result.model_dump()
+    if is_sample and not MOCK:
+        _GRADES[req.essay_id] = out
+        _GRADES_PATH.write_text(json.dumps(_GRADES, indent=2))
+    return {"result": out, "human_holistic": human}
 
 
 @app.get("/eval")
