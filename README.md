@@ -1,5 +1,8 @@
 # Alignment — measuring whether an AI grader agrees for the *right reason*
 
+> **Live demo:** LIVE_URL_HERE — real ASAP essays pre-graded against a learned
+> teacher standard; paste any essay to grade it live.
+
 The hard problem in AI assessment isn't producing a score. Anything can output a
 number. The hard problem is telling a grader that **works** from one that
 **looks like it works** — whether it matched the teacher for the right reason, or
@@ -67,7 +70,7 @@ It reports three things, each mapped to a claim:
 |---|---|---|
 | Grades like the teacher | vs held-out human marks | **QWK** (the ASAP standard) |
 | Personalizes to a grader | fit own rater vs the *other* rater | QWK gap |
-| Right for the right reason | sampled hand/model adjudication | reasoning taxonomy |
+| Right for the right reason | sampled hand/model adjudication | reasoning taxonomy *(method, not yet a result)* |
 
 The reasoning taxonomy splits wrong grades into **systematic** (a fixable
 pattern, e.g. length bias) vs **random** (the ceiling) — the same disentangling
@@ -90,7 +93,14 @@ raters on this set agree at **QWK 0.72** — that's the bar a grader is measured
 | human vs human (ceiling) | 0.72 | — | — |
 
 The best configuration reaches **92% of the human-vs-human ceiling** on this hard
-13-level scale, learning the teacher from 25 essays — no fine-tuning.
+13-level scale, learning the teacher from 25 essays — no fine-tuning. (One
+held-out split of 120 essays; read it as a strong single run, not a
+cross-validated mean.)
+
+Two different things move this table, and they're worth separating. The
+model swap (rows 1→2, same prompt) closed most of the gap: sonnet wasn't
+worse at *ranking* essays, it was systematically miscalibrated — diagnosed
+below. The prompt-format changes (rows 2→4, same model) closed the rest:
 
 Each row after the first is a measured fix, not a guess:
 

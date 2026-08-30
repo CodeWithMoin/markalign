@@ -6,6 +6,14 @@ services:
     startCommand: uvicorn backend.app:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: EDEXIA_MOCK
-        value: "1"          # flip to "0" and add ANTHROPIC_API_KEY for real grading
+        value: "0"           # real grading; set "1" for a free key-less demo
+      - key: EDEXIA_DAILY_CAP
+        value: "20"          # single-viewer link: bounded spend, resets daily
+      - key: EDEXIA_MODEL
+        value: gpt-5.6-luna
+      - key: EDEXIA_PROVIDER_URL
+        value: https://api.openai.com/v1/chat/completions
+      - key: EDEXIA_PROVIDER_KEY
+        sync: false          # set in the Render dashboard, never in the repo
       - key: ANTHROPIC_API_KEY
-        sync: false
+        sync: false          # only needed if grading via Anthropic instead
