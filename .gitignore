@@ -13,6 +13,7 @@ data/asap_set*_essays.json
 .DS_Store
 .playwright-mcp/
 *.png
+!docs/*.png
 # the root calibration output is a run artifact; results/calibration_real.json is the committed copy
 calibration_result.json
 .impeccable/hook.cache.json

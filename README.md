@@ -3,6 +3,8 @@
 > **Live demo:** **https://markalign.up.railway.app** — real ASAP essays pre-graded against a learned
 > teacher standard; paste any essay to grade it live.
 
+![The landing page: paste an essay, or try a real one the teacher marked](docs/landing.png)
+
 The hard problem in AI assessment isn't producing a score. Anything can output a
 number. The hard problem is telling a grader that **works** from one that
 **looks like it works** — whether it matched the teacher for the right reason, or
@@ -23,6 +25,11 @@ Separating those two questions — and separating systematic bias from random
 noise inside the second — is the same instinct as telling a real signal from an
 artifact. It's the judgment the rest of the repo is built to make legible.
 
+![A graded essay: every trait score pinned to verbatim quotes, next to the teacher's real mark, above the standard the system learned](docs/graded.png)
+*A real seventh-grader's essay, graded blind. The model gave 10/12; the teacher gave 12/12.
+Every score points at exact lines in the text, and the learned standard below it is readable
+JSON turned prose — what this teacher rewards and penalizes, with evidence and strength.*
+
 > **Current scope, stated up front:** this demonstrates grader-profile learning
 > and diagnosis on held-out essays *from the same assignment*. ASAP has no
 > persistent grader identities across tasks, so cross-task **teacher** transfer
@@ -33,6 +40,13 @@ artifact. It's the judgment the rest of the repo is built to make legible.
 
 > Stack mirrors a typical AI-native assessment backend: **Python + FastAPI**,
 > Pydantic-typed contracts, a model adapter, and a model-free eval harness.
+
+**Jump to:** [Run it](#run-it-in-30-seconds-no-api-key) ·
+[The eval](#the-eval-where-the-judgment-shows) ·
+[Results](#results-real-on-asap-set-7) ·
+[Generalization](#does-it-generalize-asap-set-1--different-genre-scale-and-raters) ·
+[Architecture](#architecture) ·
+[Honest limits](#honest-limits-read-before-believing-any-number)
 
 ---
 
@@ -87,6 +101,8 @@ instinct as separating a real signal from an artifact.
 ---
 
 ## Results (real, on ASAP set 7)
+
+![The scorecard on the live site: QWK framed against the human-vs-human ceiling, not against 1.0](docs/scorecard.png)
 
 120 held-out essays, a 25-essay calibration set, per grader model.
 **Read every number against the human ceiling, not against 1.0:** two trained
