@@ -1,0 +1,37 @@
+# MarkAlign
+
+> A grading-alignment demo and evaluation harness. It learns one teacher's marking
+> standard from 25 essays they scored on one assignment, grades new essays the same
+> way with every score pinned to verbatim quotes from the student's text, and — the
+> actual point — measures whether the AI agrees with the teacher for the right
+> reasons. Made by Moinuddin Shaik.
+
+Key facts (measured, not claimed; all reproducible from the repo):
+
+- Score agreement on ASAP set 7: QWK 0.664 on 120 held-out essays vs one human
+  rater — 92% of the 0.72 ceiling at which two trained human raters agree with
+  each other. Learned from 25 calibration essays, no fine-tuning.
+- Method: per-trait yes/no "checklist ladders" learned from the teacher's own
+  examples (score = count of passed bars, each pinned to a verbatim quote), plus
+  a computed score-distribution floor so the ladder matches how the teacher
+  actually uses the scale.
+- Generalization (ASAP set 1, different genre/scale/raters): raw QWK 0.369; the
+  eval diagnosed a systematic generous offset and prescribed linear calibration
+  in advance, recovering 0.576 (80% of that set's 0.721 ceiling). The
+  calibrate/don't-calibrate rule is 3-for-3 across model/dataset cases.
+- Current scope: the learned profile entangles teacher and task (all calibration
+  essays answer one assignment). Cross-task teacher transfer is deliberately not
+  claimed; it requires the same identified grader on two assignments, which
+  public data lacks.
+- Honest limits are documented in the README: confidence is anti-calibrated (the
+  abstention gate's signal doesn't work yet), reasoning-agreement is a method
+  without ground truth, results are one held-out split.
+
+## Links
+
+- [Live demo](https://markalign.up.railway.app): four real ASAP essays pre-graded
+  against the learned standard (instant, cached); paste any essay to grade it
+  live (rate-limited).
+- [Source & eval](https://github.com/CodeWithMoin/markalign): full pipeline,
+  frozen result snapshots in results/, reproducible via Makefile targets.
+- [Author](https://moinuddin.app): Moinuddin Shaik.

@@ -23,6 +23,14 @@ Separating those two questions — and separating systematic bias from random
 noise inside the second — is the same instinct as telling a real signal from an
 artifact. It's the judgment the rest of the repo is built to make legible.
 
+> **Current scope, stated up front:** this demonstrates grader-profile learning
+> and diagnosis on held-out essays *from the same assignment*. ASAP has no
+> persistent grader identities across tasks, so cross-task **teacher** transfer
+> cannot be established here — the set-1 experiment below tests transfer of the
+> *evaluation methodology*, not of a teacher profile. Separating "learned the
+> teacher" from "learned the task" needs the same identified grader on two
+> assignments (see Honest limits).
+
 > Stack mirrors a typical AI-native assessment backend: **Python + FastAPI**,
 > Pydantic-typed contracts, a model adapter, and a model-free eval harness.
 

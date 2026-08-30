@@ -244,6 +244,14 @@ def eval_summary():
     return out
 
 
+@app.get("/llms.txt")
+def llms_txt():
+    """Machine-readable site summary (llms.txt convention) — so an AI asked about
+    this link answers with the measured numbers instead of guessing."""
+    from fastapi.responses import PlainTextResponse
+    return PlainTextResponse((ROOT / "llms.txt").read_text())
+
+
 @app.get("/", response_class=HTMLResponse)
 def index():
     # stamp the task into the HTML so the banner renders in the first paint
