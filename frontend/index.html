@@ -40,10 +40,11 @@
     font-size:clamp(38px,6.4vw,70px);line-height:1.03;margin:0 0 .32em;letter-spacing:-.02em}
   /* the signature: the headline wears the same highlighter the grader draws
      across cited evidence — the product's core gesture, shown before scrolling */
+  /* same full-height highlighter as the essay's cited spans — one visual language */
   h1 em{font-style:italic;color:var(--ground);
-    background-image:linear-gradient(transparent 62%, var(--ground-soft) 62%);
-    background-repeat:no-repeat;background-size:0% 100%;padding:0 .04em;
-    animation:draw .7s var(--ease) 1s forwards}
+    background-image:linear-gradient(var(--ground-bg), var(--ground-bg));
+    background-repeat:no-repeat;background-size:0% 100%;padding:.02em .06em;
+    border-radius:8px;animation:draw .7s var(--ease) 1s forwards}
   .sub{font-size:clamp(16px,2.1vw,19px);color:var(--ink-soft);max-width:56ch;margin:0 auto;line-height:1.55}
   .dot{display:inline-block;width:7px;height:7px;border-radius:50%;
     background:var(--good);margin-right:2px;vertical-align:middle}
