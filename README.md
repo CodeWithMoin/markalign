@@ -1,6 +1,6 @@
 # Alignment — measuring whether an AI grader agrees for the *right reason*
 
-[![Live demo](https://img.shields.io/badge/live_demo-markalign.up.railway.app-5139fa)](https://markalign.up.railway.app) [![QWK](https://img.shields.io/badge/QWK-0.664_(92%25_of_human_ceiling)-010042)](results/) [![Made by](https://img.shields.io/badge/made_by-moinuddin.app-555)](https://moinuddin.app)
+[![Live demo](https://img.shields.io/badge/live_demo-markalign.up.railway.app-5139fa)](https://markalign.up.railway.app) [![QWK](https://img.shields.io/badge/QWK-0.664_(92%25_of_human_ceiling)-010042)](results/)
 
 Real ASAP essays pre-graded against a learned teacher standard; paste any essay on the live demo to grade it live.
 
