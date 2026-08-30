@@ -218,10 +218,14 @@
   .asrc{font-size:12.5px;color:var(--ink-soft);margin-top:22px}
   .asrc b{color:var(--ink);font-weight:600}
   .err{color:#c0362b;font-size:14px;margin-top:12px}
-  footer{margin-top:80px;padding-top:24px;border-top:1px solid var(--line);
+  footer{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;
+    margin-top:80px;padding-top:24px;border-top:1px solid var(--line);
     font-size:13px;color:var(--ink-soft);line-height:1.6}
   .mono{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:.92em;
     background:var(--ground-bg);color:var(--ground);padding:1px 6px;border-radius:5px}
+  .madeby{white-space:nowrap}
+  .madeby a{color:var(--navy);font-weight:600;text-decoration:none;border-bottom:1px solid var(--ground-soft)}
+  .madeby a:hover{color:var(--ground)}
 </style>
 </head>
 <body>
@@ -305,7 +309,8 @@
   </div><!-- /resultView -->
 
   <footer>
-    Demo on public essay data (ASAP); not a claim about any specific curriculum. Scores here are graded live; alignment figures above are from a held-out evaluation.
+    <span>Demo on public essay data (ASAP); not a claim about any specific curriculum. Scores here are graded live; alignment figures above are from a held-out evaluation.</span>
+    <span class="madeby">Made by <a href="https://github.com/CodeWithMoin" target="_blank" rel="noopener">Moinuddin Shaik</a> · <a href="https://github.com/CodeWithMoin/markalign" target="_blank" rel="noopener">source&nbsp;&amp;&nbsp;eval</a></span>
   </footer>
 </div>
 
