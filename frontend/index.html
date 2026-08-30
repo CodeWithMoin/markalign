@@ -38,10 +38,21 @@
   header{padding:56px 0 30px;text-align:center}
   h1{font-family:var(--serif);font-weight:600;color:var(--navy);
     font-size:clamp(38px,6.4vw,70px);line-height:1.03;margin:0 0 .32em;letter-spacing:-.02em}
-  h1 em{font-style:italic;color:var(--ground)}
+  /* the signature: the headline wears the same highlighter the grader draws
+     across cited evidence — the product's core gesture, shown before scrolling */
+  h1 em{font-style:italic;color:var(--ground);
+    background-image:linear-gradient(transparent 62%, var(--ground-soft) 62%);
+    background-repeat:no-repeat;background-size:0% 100%;padding:0 .04em;
+    animation:draw .7s var(--ease) .45s forwards}
   .sub{font-size:clamp(16px,2.1vw,19px);color:var(--ink-soft);max-width:56ch;margin:0 auto;line-height:1.55}
   .dot{display:inline-block;width:7px;height:7px;border-radius:50%;
     background:var(--good);margin-right:2px;vertical-align:middle}
+
+  /* ---- task banner ---- */
+  .taskbar{max-width:900px;margin:0 auto 10px;padding:11px 16px;background:var(--ground-bg);
+    border-radius:12px;font-size:13.5px;color:var(--ink);line-height:1.5}
+  .taskbar .tk{font-weight:700;color:var(--ground);text-transform:uppercase;font-size:10px;
+    letter-spacing:.07em;margin-right:9px;white-space:nowrap}
 
   /* ---- the composer: Edexia-style paste card ---- */
   .composer{background:var(--white);border:1px solid var(--line);border-radius:20px;
@@ -57,16 +68,6 @@
   .cbtns{display:flex;gap:10px;align-items:center}
   .cbtns button{display:inline-flex;align-items:center;gap:7px}
   .cbtns .ghost svg{width:15px;height:15px}
-  .samples{display:flex;flex-wrap:wrap;gap:8px;align-items:center;max-width:900px;
-    margin:16px auto 0;justify-content:center}
-  .samples .lbl{font-size:12px;color:var(--ink-soft);margin-right:2px}
-  .schip{font-size:12.5px;font-weight:600;color:var(--ink);background:var(--white);
-    border:1px solid var(--line);border-radius:999px;padding:7px 14px;cursor:pointer;
-    transition:border-color .12s var(--ease),color .12s var(--ease),background .12s var(--ease)}
-  .schip:hover{background:var(--ground-bg);border-color:var(--ground-soft)}
-  .schip.on{background:var(--navy);color:#fff;border-color:var(--navy)}
-  .schip .sc{opacity:.62;font-weight:500}
-  .schip.on .sc{opacity:.8}
   .backbar{margin:4px 0 14px}
   .back{display:inline-flex;align-items:center;gap:6px}
   .back svg{width:15px;height:15px}
@@ -138,18 +139,32 @@
   .num{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;
     font-size:9.5px;font-weight:700;color:#fff;background:var(--ground);border-radius:999px;
     padding:0 3px;vertical-align:super;margin-left:3px;font-family:var(--sans);line-height:1}
-  .margin{background:var(--paper-2);border:1px solid var(--line);border-radius:0 0 16px 16px;padding:8px 18px}
-  @media(min-width:860px){.margin{border-radius:0 16px 16px 0}}
-  .anno{font-size:13.5px;padding:12px 0;border-bottom:1px solid var(--line);cursor:pointer;
+  .margin{background:var(--paper-2);border:1px solid var(--line);border-radius:0 0 16px 16px}
+  .minner{padding:8px 18px}
+  /* desktop: the margin never outgrows the essay — it scrolls inside it instead
+     of leaving a tall empty block after the essay ends */
+  @media(min-width:860px){
+    .margin{border-radius:0 16px 16px 0;position:relative}
+    .minner{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;overflow-anchor:none}
+    .minner::-webkit-scrollbar{width:8px}
+    .minner::-webkit-scrollbar-thumb{background:var(--ground-soft);border-radius:99px}
+  }
+  .tgroup{padding:12px 0 4px;border-bottom:1px solid var(--line)}
+  .tgroup:last-child{border-bottom:none}
+  .thead{display:flex;align-items:center;justify-content:space-between;padding:0 0 2px}
+  .thead .t{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ground)}
+  .thead .s{font-weight:700;font-size:15px;color:var(--ink)}
+  .anno{font-size:13.5px;padding:9px 0;cursor:pointer;border-radius:8px;
     animation:annoIn .5s var(--ease) both;animation-delay:var(--d,0ms);
-    transition:background-color .18s var(--ease);margin:0 -18px;padding-left:18px;padding-right:18px}
+    transition:background-color .18s var(--ease);padding-left:8px;padding-right:8px;margin:0 -8px}
+  .anno.dim{cursor:default;opacity:.75}
   @keyframes annoIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
   .anno.lit{background:var(--ground-bg)}
   .result.on{animation:fadeIn .5s var(--ease) both}
   @keyframes fadeIn{from{opacity:0}to{opacity:1}}
   @media (prefers-reduced-motion:reduce){
     .anno,.result.on{animation:none}
-    mark{animation:none;background-size:100% 100%}}
+    mark,h1 em{animation:none;background-size:100% 100%}}
   .anno:last-child{border-bottom:none}
   .anno .num{vertical-align:middle;margin:0 8px 0 0}
   .anno .t{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ground)}
@@ -182,7 +197,11 @@
     color:var(--ink-soft);margin:0 0 14px}
   .qwk{font-family:var(--serif);font-weight:600;font-size:56px;line-height:1;color:var(--navy)}
   .qwk small{font-family:var(--sans);font-size:14px;font-weight:600;color:var(--ink-soft);margin-left:7px}
-  .track{height:8px;border-radius:999px;background:var(--paper-2);margin:18px 0 12px;overflow:hidden}
+  [hidden]{display:none!important}
+  .track{height:8px;border-radius:999px;background:var(--paper-2);margin:18px 0 4px;position:relative}
+  .track .tick{position:absolute;top:-4px;bottom:-4px;width:2px;border-radius:2px;
+    background:var(--navy);opacity:.65}
+  .ticklbl{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink-soft);margin:0 0 12px}
   .track>span{display:block;height:100%;width:100%;border-radius:999px;background:var(--ground);
     transform:scaleX(0);transform-origin:left center;transition:transform .6s var(--ease)}
   .arow{display:flex;justify-content:space-between;gap:16px;font-size:13px;color:var(--ink-soft);
@@ -209,7 +228,10 @@
 <div class="wrap">
   <nav class="topbar">
     <div class="brand"><span class="mk"></span>Alignment</div>
-    <div class="tag">a grading-alignment method demo</div>
+    <div class="tag" id="topTag">a grading-alignment method demo</div>
+    <button class="ghost back" id="topBack" hidden onclick="showCompose()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      Grade another essay</button>
   </nav>
   <div id="composeView">
   <header>
@@ -217,6 +239,8 @@
     <p class="sub">It learns one teacher's marking standard, grades a student essay the same way,
       and shows the exact lines behind every score.</p>
   </header>
+
+  <div class="taskbar" id="taskbar" hidden><span class="tk">The task being graded against</span><span id="taskText"></span></div>
 
   <div class="composer">
     <textarea id="essay" oninput="autogrow(this)" placeholder="Paste a student essay, or load a real sample below…"></textarea>
@@ -230,26 +254,23 @@
       </div>
     </div>
   </div>
-  <div class="samples" id="sampleTabs"></div>
   <div id="err" class="err"></div>
   </div><!-- /composeView -->
 
   <div id="resultView" hidden>
-  <div class="backbar"><button class="ghost back" onclick="showCompose()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-    Grade another essay</button></div>
-
   <div id="result" class="result">
     <div class="scores" id="scores"></div>
     <h2 style="margin-bottom:10px">Every score, grounded in the text</h2>
     <p class="hint">Each highlight is a line the grader cited — hover a margin note to find its evidence in the essay.</p>
     <div class="manuscript">
       <div class="essay" id="marked"></div>
-      <div class="margin" id="annos"></div>
+      <div class="margin"><div class="minner" id="annos"></div></div>
     </div>
 
     <div class="profile" id="profileBox">
       <h3>The standard it inferred <span class="sev" id="sev"></span></h3>
+      <p class="hint" style="margin-bottom:2px">Not about the essay above — this is the teacher's marking
+        standard, learned once from essays they had already scored. Every essay is graded against it.</p>
       <div class="twocol">
         <div><label>rewards</label><ul id="rewards"></ul></div>
         <div><label>penalizes</label><ul id="penalizes"></ul></div>
@@ -266,8 +287,8 @@
       <div class="apanel">
         <div class="cap">Score-agreement · vs the teacher</div>
         <div class="qwk" id="qwkVal">—</div>
-        <div class="track"><span id="qwkBar"></span></div>
-        <div class="arow"><span>quadratic weighted kappa (QWK)</span></div>
+        <div class="track"><span id="qwkBar"></span><span class="tick" style="left:72%"></span></div>
+        <div class="ticklbl"><span>quadratic weighted kappa (QWK)</span><span id="ceilLbl">human-vs-human ceiling 0.72&nbsp;▲</span></div>
         <div class="arow" id="calRow" hidden><span>after scale calibration</span><b id="qwkCal">—</b></div>
         <div class="arow"><span>within 1 mark</span><b id="within1">—</b></div>
         <div class="arow"><span>personalization gap · own vs other rater</span><b id="pgap">—</b></div>
@@ -284,10 +305,7 @@
   </div><!-- /resultView -->
 
   <footer>
-    Score-agreement is measured with quadratic weighted kappa against held-out human marks.
-    Reasoning-agreement — whether the grade is right for the <em>right reason</em> — is the part the
-    dataset can't verify, and is adjudicated by hand. Run <span class="mono">python -m eval.run_eval</span>
-    for the numbers. Method demo on public essay data; not a claim about any specific curriculum.
+    Demo on public essay data (ASAP); not a claim about any specific curriculum. Scores here are graded live; alignment figures above are from a held-out evaluation.
   </footer>
 </div>
 
@@ -295,31 +313,32 @@
 // ---- preloaded demo: a real teacher + real ASAP essays, graded on arrival ----
 let samples=[], cur=0, holisticMax=6, traitMax=6, PROFILE=null;
 
-function renderSampleTabs(){
-  const el=document.getElementById('sampleTabs'); if(!samples.length){el.innerHTML='';return;}
-  // The teacher's score is deliberately hidden here — the model grades blind, and
-  // the reveal (model vs teacher, side by side) happens on the results page.
-  el.innerHTML='<span class="lbl">real essays this teacher marked — the model grades blind, then you see the teacher\'s score:</span>'
-    +samples.map((s,i)=>`<button class="schip" onclick="loadSample(${i})">Essay ${i+1}</button>`).join('');
-}
 function autogrow(el){ el.style.height='auto'; el.style.height=el.scrollHeight+'px'; }
 function fillSample(i){
   if(!samples.length) return;
   cur=(i+samples.length)%samples.length;
   const t=document.getElementById('essay'); t.value=samples[cur].text; autogrow(t);
-  document.querySelectorAll('.schip').forEach((c,j)=>c.classList.toggle('on',j===cur));
 }
-function loadSample(i){ fillSample(i); run(); }        // sample chip → fill, grade, go to results
+// a chip only loads the essay into the box — grading is the explicit button press;
+// deep links (#essay-id) still auto-grade so a reload restores the results view
 function cycleSample(){ fillSample(cur+1); document.getElementById('essay').focus(); }
 function showResults(){ document.getElementById('composeView').hidden=true;
-  document.getElementById('resultView').hidden=false; scrollTo({top:0}); }
+  document.getElementById('resultView').hidden=false; scrollTo({top:0});
+  document.getElementById('topTag').hidden=true; document.getElementById('topBack').hidden=false; }
 function showCompose(){ document.getElementById('resultView').hidden=true;
-  document.getElementById('composeView').hidden=false; scrollTo({top:0}); }
+  document.getElementById('composeView').hidden=false; scrollTo({top:0});
+  document.getElementById('topTag').hidden=false; document.getElementById('topBack').hidden=true;
+  history.replaceState(null,'',location.pathname); }   // back to home → clean URL
 
 fetch('/demo').then(r=>r.json()).then(d=>{
   samples=d.samples||[]; PROFILE=d.profile; holisticMax=d.holistic_max||6; traitMax=d.trait_max||6;
-  renderSampleTabs();
-  if(samples.length) fillSample(0);          // pre-fill the box; grading happens on click
+  if(d.prompt){ document.getElementById('taskText').textContent=d.prompt;
+    document.getElementById('taskbar').hidden=false; }
+  // deep link: /#<essay_id> re-grades that sample on reload instead of dropping to home
+  const want=decodeURIComponent(location.hash.slice(1));
+  const i=samples.findIndex(s=>s.essay_id===want);
+  if(i>=0){ fillSample(i); run(); }
+  else if(samples.length) fillSample(0);     // pre-fill the box; grading happens on click
 }).catch(()=>{ document.getElementById('err').textContent='Backend unreachable — start the server.'; });
 
 fetch('/health').then(r=>r.json()).then(h=>{
@@ -335,7 +354,11 @@ fetch('/eval').then(r=>r.json()).then(d=>{
   document.getElementById('align').hidden=false;
   const c1=d.claim_1_grades_like_teacher||{}, c2=d.claim_2_personalization||{}, cfg=d.config||{};
   const qwk=c1.qwk_vs_rater1;
-  document.getElementById('qwkVal').innerHTML=(qwk!=null?qwk.toFixed(2):'—')+'<small>/ 1.00</small>';
+  // frame the number against what humans achieve, not a mythical 1.00 — two
+  // trained raters on this set agree at QWK 0.72
+  const pctCeil=qwk!=null?Math.round(qwk/0.72*100):null;
+  document.getElementById('qwkVal').innerHTML=(qwk!=null?qwk.toFixed(2):'—')
+    +(pctCeil!=null?`<small>${pctCeil}% of the human ceiling</small>`:'');
   document.getElementById('qwkBar').style.transform='scaleX('+Math.max(0,Math.min(1,qwk||0))+')';
   if(d.calibration&&d.calibration.calibrated_qwk!=null){
     document.getElementById('calRow').hidden=false;
@@ -366,31 +389,42 @@ fetch('/eval').then(r=>r.json()).then(d=>{
       : `Lucky rate <b>${pct(c3.lucky_rate)}%</b> — right score, but the reasons didn't hold up.`;
   }else{
     document.getElementById('taxBar').style.display='none';
-    document.getElementById('taxHead').innerHTML='Run <span class="mono">python -m eval.run_eval --adjudicate 60</span> to populate the reasoning taxonomy.';
+    document.getElementById('taxHead').innerHTML='Reasoning-agreement is measured by hand-adjudicating a sample of grades against the evidence they cite — not included in this evaluation snapshot.';
   }
   const n=cfg.n_scored||cfg.n_test||'—';
   const grader=cfg.model||(cfg.mock?'demo grader (deliberate length-bias)':'live model grading');
-  document.getElementById('asrc').innerHTML=`Measured on <b>${n}</b> held-out essays · <b>${grader}</b>`
-    +` · reproduce with <span class="mono">python -m eval.run_eval</span>`;
+  document.getElementById('asrc').innerHTML=`Measured on <b>${n}</b> held-out essays · <b>${grader}</b>`;
 }).catch(()=>{});
 
 function esc(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
 
 function markUp(text, judgements){
-  // highlight each cited span; attach an index so margin notes can link
+  // highlight each cited span; attach an index so margin notes can link.
+  // Quotes come from a model — try exact, then case-insensitive, then a prefix,
+  // so a near-miss quote still lights up instead of silently breaking the link.
   let html = text.replace(/</g,'&lt;');
   let idx=0; const notes=[];
   judgements.forEach(tj=>{
     tj.spans.forEach(sp=>{
       const q = sp.quote.replace(/</g,'&lt;').trim();
       if(!q) return;
-      const re = new RegExp(esc(q)); const i = idx;
-      if(re.test(html)){
+      const i = idx;
+      let re = new RegExp(esc(q));
+      if(!re.test(html)) re = new RegExp(esc(q),'i');
+      if(!re.test(html) && q.length>40){
+        // prefix fallback must end on a WORD boundary — cutting mid-word closes the
+        // highlight inside a word and renders like a broken "don t"
+        let p=q.slice(0,40); const cut=p.lastIndexOf(' ');
+        if(cut>15) p=p.slice(0,cut);
+        re = new RegExp(esc(p),'i');
+      }
+      const matched = re.test(html);
+      if(matched){
         html = html.replace(re, m=>`<mark data-i="${i}" style="--d:${i*170}ms"`
-          +` onmouseenter="lite(${i},1)" onmouseleave="lite(${i},0)">${m}`
+          +` onmouseenter="lite(${i},1)" onmouseleave="lite(${i},0)" onclick="goToNote(${i})">${m}`
           +`<sup class="num">${i+1}</sup></mark>`);
       }
-      notes.push({i:idx, trait:tj.trait, score:tj.score, quote:sp.quote, reason:sp.reason});
+      notes.push({i:idx, trait:tj.trait, score:tj.score, quote:sp.quote, reason:sp.reason, matched});
       idx++;
     });
   });
@@ -412,6 +446,8 @@ async function run(){
     const {result,human_holistic}=await res.json();
     show(result, human_holistic);
     showResults();
+    // graded a known sample → its id goes in the URL, so reload/share lands back here
+    history.replaceState(null,'', sid ? '#'+encodeURIComponent(sid) : location.pathname);
   }catch(e){ err.textContent="Couldn't grade: "+e.message; }
   finally{ btn.disabled=false; btn.textContent='Grade essay'; }
 }
@@ -444,13 +480,23 @@ function show(result, human){
   const {html,notes}=markUp(document.getElementById('essay').value, result.trait_judgements);
   document.getElementById('marked').innerHTML=html;
 
-  const annos=document.getElementById('annos');
-  annos.innerHTML = notes.map(n=>`<div class="anno" data-i="${n.i}"
-      style="--d:${n.i*170+80}ms"
-      onmouseenter="lite(${n.i},1)" onmouseleave="lite(${n.i},0)">
-      <span class="s">${n.score}/${traitMax}</span><span class="num">${n.i+1}</span><span class="t">${n.trait}</span>
-      <div class="q">"${n.quote.slice(0,70)}${n.quote.length>70?'…':''}"</div>
-      <div>${n.reason}</div></div>`).join('') || '<p class="hint">No spans cited.</p>';
+  // margin notes grouped by trait: score once in the group header, evidence under it
+  const groups=[];
+  notes.forEach(n=>{
+    let g=groups[groups.length-1];
+    if(!g||g.trait!==n.trait){g={trait:n.trait,score:n.score,items:[]};groups.push(g);}
+    g.items.push(n);
+  });
+  document.getElementById('annos').innerHTML = groups.map(g=>
+    `<div class="tgroup"><div class="thead"><span class="t">${g.trait}</span>`
+    +`<span class="s">${g.score}/${traitMax}</span></div>`
+    +g.items.map(n=>`<div class="anno${n.matched?'':' dim'}" data-i="${n.i}" style="--d:${n.i*170+80}ms"`
+      +(n.matched?` onmouseenter="lite(${n.i},1)" onmouseleave="lite(${n.i},0)" onclick="goTo(${n.i})"`: '')
+      +`>${n.matched?`<span class="num">${n.i+1}</span> `:''}`
+      +`<span class="q">"${n.quote.slice(0,60)}${n.quote.length>60?'…':''}"</span>`
+      +`<div>${n.reason}</div></div>`).join('')
+    +`</div>`).join('') || '<p class="hint">No spans cited.</p>';
+  document.getElementById('annos').scrollTop=0;
 
   if(PROFILE){
     document.getElementById('sev').textContent=PROFILE.severity;
@@ -468,6 +514,18 @@ function show(result, human){
 function lite(i,on){
   document.querySelectorAll(`mark[data-i="${i}"]`).forEach(m=>m.classList.toggle('hot',!!on));
   document.querySelectorAll(`.anno[data-i="${i}"]`).forEach(a=>a.classList.toggle('lit',!!on));
+}
+function goToNote(i){
+  // click a highlight in the essay → scroll the margin to its note and flash it
+  const a=document.querySelector(`.anno[data-i="${i}"]`); if(!a) return;
+  const sc=document.getElementById('annos');
+  if(sc.scrollHeight>sc.clientHeight) sc.scrollTo({top:Math.max(0,a.offsetTop-60),behavior:'smooth'});
+  else a.scrollIntoView({behavior:'smooth',block:'nearest'});
+  a.classList.add('lit'); setTimeout(()=>a.classList.remove('lit'),1200);
+}
+function goTo(i){
+  const m=document.querySelector(`mark[data-i="${i}"]`);
+  if(m) m.scrollIntoView({behavior:'smooth',block:'center'});
 }
 </script>
 </body>
