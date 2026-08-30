@@ -515,7 +515,11 @@ async function run(){
     const sid=(samples[cur] && text===samples[cur].text) ? samples[cur].essay_id : null;
     const res=await fetch('/grade_own',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({essay_text:text, essay_id:sid, threshold:0.6})});
-    if(!res.ok) throw new Error((await res.json()).detail||res.statusText);
+    if(!res.ok){ // error body may not be JSON (proxy 502s etc.) — never show a parse error
+      let msg=res.statusText;
+      try{ msg=(await res.json()).detail||msg; }catch(_){}
+      throw new Error(msg);
+    }
     const {result,human_holistic}=await res.json();
     show(result, human_holistic);
     showResults();

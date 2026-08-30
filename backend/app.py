@@ -201,7 +201,13 @@ def grade_own(req: OwnGrade, request: Request):
     _guard_live_grade(request, req.essay_text)   # only grades that reach the model
     prof = _demo_profile()
     essay = Essay(essay_id=req.essay_id or "live", set_id=DEMO_RUBRIC.set_id, text=req.essay_text)
-    result = apply_gate(grade(essay, DEMO_RUBRIC, prof, anchors=_DEMO_ANCHORS, mock=MOCK), req.threshold)
+    try:
+        result = apply_gate(grade(essay, DEMO_RUBRIC, prof, anchors=_DEMO_ANCHORS, mock=MOCK), req.threshold)
+    except HTTPException:
+        raise
+    except Exception as ex:   # model/provider failure → clean JSON error, not a raw 500
+        raise HTTPException(502, f"live grading is unavailable right now ({type(ex).__name__}) — "
+                                 "the preloaded sample essays still work")
     out = result.model_dump()
     if is_sample and not MOCK:
         _GRADES[req.essay_id] = out
