@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -29,6 +30,17 @@ from backend.profile_builder import build_profile          # noqa: E402
 from backend.grading_engine import grade                   # noqa: E402
 from backend.abstention import apply_gate                  # noqa: E402
 from eval import dataset, metrics, reasoning               # noqa: E402
+
+
+def _load_dotenv(path: Path) -> None:
+    """Populate os.environ from a .env if present. Never prints values."""
+    if not path.exists():
+        return
+    for line in path.read_text().splitlines():
+        line = line.strip()
+        if line and not line.startswith("#") and "=" in line:
+            k, v = line.split("=", 1)
+            os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
 
 
 def _split(records, k):
@@ -80,6 +92,8 @@ def main():
     ap.add_argument("--out", default="eval_report.json")
     args = ap.parse_args()
 
+    _load_dotenv(ROOT / ".env")
+
     rubric = dataset.load_rubric(ROOT / args.rubric)
     records = dataset.load_records(ROOT / args.data)
     calib_rec, test_rec = _split(records, args.calib)
@@ -119,7 +133,9 @@ def main():
     report = {
         "config": {"mock": args.mock, "calib": args.calib, "threshold": args.threshold,
                    "n_test": len(test_essays), "n_scored": len(scored),
-                   "n_abstained": len(graded) - len(scored)},
+                   "n_abstained": len(graded) - len(scored),
+                   "model": "mock" if args.mock else os.environ.get("EDEXIA_MODEL", "claude-sonnet-4-5"),
+                   "provider": "openai" if os.environ.get("EDEXIA_PROVIDER_URL") else "anthropic"},
         "claim_1_grades_like_teacher": {
             "qwk_vs_rater1": round(qwk1, 3),
             **metrics.exact_and_adjacent(yt, yp),

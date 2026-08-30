@@ -144,11 +144,14 @@ def eval_summary():
         return {"available": False}
 
     out = {"available": True, "source": source, **report}
-    cal = ROOT / "calibration_result.json" if source == "live" else ROOT / "results" / "calibration_real.json"
-    if not cal.exists():
-        cal = ROOT / "results" / "calibration_real.json"
+    # Attach calibration ONLY when it actually improves QWK for the served report.
+    # (On the current luna headline it hurts — 0.478 < 0.585 — so it's omitted.)
+    cal = ROOT / "calibration_result.json" if source == "live" else ROOT / "results" / "calibration_luna.json"
     if cal.exists():
-        out["calibration"] = json.loads(cal.read_text())
+        c = json.loads(cal.read_text())
+        raw_qwk = report.get("claim_1_grades_like_teacher", {}).get("qwk_vs_rater1")
+        if raw_qwk is not None and c.get("calibrated_qwk", 0) > raw_qwk:
+            out["calibration"] = c
     return out
 
 

@@ -4,5 +4,6 @@
   "raw_qwk": 0.39686320421469046,
   "calibrated_qwk": 0.4734000870700914,
   "mae_raw": 2.8666666666666667,
-  "mae_cal": 1.65
+  "mae_cal": 1.65,
+  "model": "claude-sonnet-4-5"
 }

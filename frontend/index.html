@@ -369,8 +369,8 @@ fetch('/eval').then(r=>r.json()).then(d=>{
     document.getElementById('taxHead').innerHTML='Run <span class="mono">python -m eval.run_eval --adjudicate 60</span> to populate the reasoning taxonomy.';
   }
   const n=cfg.n_scored||cfg.n_test||'—';
-  document.getElementById('asrc').innerHTML=`Measured on <b>${n}</b> held-out essays · `
-    +(cfg.mock?'demo grader (deliberate length-bias)':'live model grading')
+  const grader=cfg.model||(cfg.mock?'demo grader (deliberate length-bias)':'live model grading');
+  document.getElementById('asrc').innerHTML=`Measured on <b>${n}</b> held-out essays · <b>${grader}</b>`
     +` · reproduce with <span class="mono">python -m eval.run_eval</span>`;
 }).catch(()=>{});
 

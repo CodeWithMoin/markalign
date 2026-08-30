@@ -76,37 +76,42 @@ instinct as separating a real signal from an artifact.
 
 ## Results (real, on ASAP set 7)
 
-Real run: `claude-sonnet-4-5`, 120 held-out essays, a 25-essay calibration set.
+120 held-out essays, a 25-essay calibration set, per grader model.
 **Read every number against the human ceiling, not against 1.0:** two trained
-raters on this set agree at **QWK 0.72**. That's the bar.
+raters on this set agree at **QWK 0.72** — that's the bar a grader is measured against.
 
-| | QWK vs the teacher | mean error (0–12 scale) |
-|---|---|---|
-| Grader as-is | **0.40** | 2.9 pts |
-| + scale calibration | **0.47** (ceiling ~0.65) | 1.7 pts |
-| Human vs human (ceiling) | 0.72 | — |
+| grader model | QWK vs the teacher | within 1 mark | mean error (0–12) |
+|---|---|---|---|
+| `claude-sonnet-4-5` | 0.40 | 29% | 2.9 pts |
+| **`gpt-5.6-luna`** | **0.585** | **55%** | 1.3 pts |
+| human vs human (ceiling) | 0.72 | — | — |
 
-**The number isn't the point — the diagnosis is.** A 0.40 looks mediocre, so the
-eval asks *why*. The confusion matrix shows the grader **ranks essays correctly**
-(its mean score rises monotonically with the human's) but scores **systematically
-harsh and compressed** — it never uses the top of the scale. That error is
-**systematic, not random**, so it's fixable: a scale transform fit on the
-calibration set (applied to held-out test) nearly halves the error. This is the
-whole thesis in one run — *telling a grader that works from one that only looks
-like it, then locating the fixable part.*
+The stronger model reaches **81% of the human-vs-human ceiling** on this hard
+13-level scale, learning the teacher from 25 essays — no fine-tuning.
 
-**Grader-quality probe (directional, n=10):** a stronger model (Opus) grading the
-same essays **blind** with a few anchors reached **QWK 0.74** (≈ the human
-ceiling), mean error 1.5. Small sample — treat as a signal, not a headline — but
-strong evidence the gap above is **model + calibration, not a task ceiling**.
+**But the number isn't the point; the eval's *diagnosis* is.** Two things the same
+harness surfaced that a bare QWK would hide:
 
-**Personalization:** own-rater vs other-rater gap **+0.02** — small *by
+1. **The weak model wasn't broken — it was miscalibrated.** Its mean score rises
+   monotonically with the human's (it *ranks* essays correctly) but runs
+   systematically harsh and compressed. That error is **systematic, not random**,
+   so a scale transform fit on the calibration set recovers it: **0.40 → 0.47**,
+   mean error 2.9 → 1.7.
+2. **Calibration is a targeted fix, not a free booster — and applied blindly it
+   *hurts*.** The same transform on the already-well-calibrated strong model made
+   it *worse* (**0.585 → 0.478**): it over-compressed a grader that already had the
+   right spread. So calibration must be **conditional on the diagnosis** (systematic
+   offset vs. already-good spread) — which is exactly what the eval measures. Knowing
+   *when not to calibrate* is the point.
+
+**Personalization:** own-rater vs other-rater gap **+0.03** — small *by
 construction* (the two raters share a rubric), which is the honest expected result.
 
 > Why it matters here: moving beyond standardised senior English into per-department,
 > Years 7–10 assessment means learning **each grader's** standard from a handful of
 > examples — and expanding *without losing trust*. This measures exactly that: can it
-> learn one grader's standard, and can you tell when it's off *and why*.
+> learn one grader's standard, tell when it's off *and why*, and know which fix
+> actually helps.
 
 ---
 
@@ -176,6 +181,7 @@ converted sample is checked in so the pipeline is provably real offline.
 - **Real ASAP ≠ your distribution.** Score-agreement numbers are real (ASAP set 7, held-out marks), but ASAP isn't VCE/HSC/IB. The claim is *the method transfers*, never *it works on a specific curriculum's distribution*. Read the human ceiling with it: two trained raters agree at QWK ≈ 0.72, so a grader is measured against 0.72, not 1.0.
 - **The two raters share a rubric**, so the personalization gap is small **by construction**. A small effect is the expected, honest result; a large one would be suspicious.
 - **Confidence is anti-calibrated, so the abstention gate is currently useless.** On the real run the model never reported confidence below the 0.6 threshold (0/120 abstentions), and its more-confident grades were *worse*: mean absolute error 3.13 in the 0.8–1.0 band vs 2.25 in the 0.6–0.8 band. The gate works, the signal driving it does not. Calibrating confidence — not just scores — is the next piece of work.
+- **Calibration is not a universal booster.** On the already-well-calibrated stronger grader the same scale transform *reduced* agreement (QWK 0.585 → 0.478); it only helps a model with a systematic offset, not one whose error is spread. So it's gated on the eval's systematic-vs-spread diagnosis, not applied by default (see Results).
 - **Reasoning-agreement is a method, not a validated result.** There is no reasoning ground truth in ASAP, so the taxonomy rests on hand-adjudication against documented labelling criteria — its credibility is in those criteria, not in a number. Score-agreement is the number you can trust; reasoning-agreement is the framework for the harder question.
 
 ---
