@@ -53,9 +53,10 @@ uvicorn backend.app:app --reload          # EDEXIA_MOCK unset → real grading
 # prove the pipeline, no key (deterministic fake grader)
 python -m eval.run_eval --mock --data data/asap_set7_sample.json --rubric data/asap_set7_rubric.json
 
-# real numbers on real ASAP set 7 (needs ANTHROPIC_API_KEY; --max-test caps cost)
+# real numbers on real ASAP set 7 (needs a model key in .env; --max-test caps cost)
+# --checklist = the headline config: teacher-derived yes/no ladders, score = count of yeses
 python -m eval.run_eval --data data/asap_set7_essays.json --rubric data/asap_set7_rubric.json \
-                        --calib 25 --max-test 120
+                        --calib 25 --max-test 120 --checklist
 
 python -m eval.run_eval --mock --adjudicate 40   # + reasoning taxonomy (method demo)
 ```
@@ -80,17 +81,39 @@ instinct as separating a real signal from an artifact.
 **Read every number against the human ceiling, not against 1.0:** two trained
 raters on this set agree at **QWK 0.72** — that's the bar a grader is measured against.
 
-| grader model | QWK vs the teacher | within 1 mark | mean error (0–12) |
+| grader model · prompt format | QWK vs the teacher | within 1 mark | mean error (0–12) |
 |---|---|---|---|
-| `claude-sonnet-4-5` | 0.40 | 29% | 2.9 pts |
-| **`gpt-5.6-luna`** | **0.585** | **55%** | 1.3 pts |
+| `claude-sonnet-4-5` · direct rating | 0.40 | 29% | 2.9 pts |
+| `gpt-5.6-luna` · direct rating | 0.585 | 55% | 1.3 pts |
+| `gpt-5.6-luna` · checklist | 0.656 | 41% | 2.0 pts |
+| **`gpt-5.6-luna` · checklist + score-distribution floor** | **0.664** | **56%** | 1.66 pts |
 | human vs human (ceiling) | 0.72 | — | — |
 
-The stronger model reaches **81% of the human-vs-human ceiling** on this hard
+The best configuration reaches **92% of the human-vs-human ceiling** on this hard
 13-level scale, learning the teacher from 25 essays — no fine-tuning.
 
-**But the number isn't the point; the eval's *diagnosis* is.** Two things the same
-harness surfaced that a bare QWK would hide:
+Each row after the first is a measured fix, not a guess:
+
+- **Checklist grading** (row 3) came from the scoring-bias literature: LLM judges
+  are unstable on ordinal scales but steady on binary decisions. Instead of "rate
+  ideas 0–3", the profile builder learns a per-trait ladder of yes/no questions
+  *from the teacher's own examples*; the score is the count of passed bars, each
+  bar pinned to a verbatim quote. QWK jumped because the grader finally uses the
+  whole scale the way the teacher does — but its worst misses got worse (within-1
+  fell to 41%): the ladders had no floor, so weak essays took 0s a real teacher
+  never gives.
+- **The score-distribution floor** (row 4) fixed that with data, not a rule. Code
+  counts how the teacher actually uses each trait's scale over the calibration
+  essays (this teacher gives organization a 0 on ~0.6% of essays; ideas, ~9%) and
+  puts the counts in the prompt, with one conditional instruction: *if* the teacher
+  never uses the bottom score, the ladder's first rung must be a bar nearly every
+  essay clears. Counting is code's job; noticing a distribution across 25 essays
+  is exactly what an LLM quietly fails at. The fix is per-grader — a genuinely
+  harsh teacher's counts would keep the ladder strict — and it moved every metric
+  the right way at once, dissolving the row-3 tradeoff.
+
+**The number still isn't the point; the eval's *diagnosis* is.** Two things the
+same harness surfaced that a bare QWK would hide:
 
 1. **The weak model wasn't broken — it was miscalibrated.** Its mean score rises
    monotonically with the human's (it *ranks* essays correctly) but runs

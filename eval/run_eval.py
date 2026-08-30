@@ -87,6 +87,8 @@ def main():
     ap.add_argument("--adjudicate", type=int, default=0, help="sample size for reasoning taxonomy")
     ap.add_argument("--max-test", type=int, default=0, dest="max_test",
                     help="cap held-out essays graded (0 = all) — controls cost/time of a real run")
+    ap.add_argument("--checklist", action="store_true",
+                    help="binary decomposition: learn per-trait yes/no ladders, score = count of yeses")
     ap.add_argument("--data", default="data/sample_essays.json")
     ap.add_argument("--rubric", default="data/rubric.json")
     ap.add_argument("--out", default="eval_report.json")
@@ -101,8 +103,10 @@ def main():
         test_rec = test_rec[:args.max_test]
 
     # --- Profiles for both raters (from calibration split only) ---
-    prof1 = build_profile("rater1", rubric, dataset.graded_examples(calib_rec, "rater1"), mock=args.mock)
-    prof2 = build_profile("rater2", rubric, dataset.graded_examples(calib_rec, "rater2"), mock=args.mock)
+    prof1 = build_profile("rater1", rubric, dataset.graded_examples(calib_rec, "rater1"),
+                          mock=args.mock, checklist=args.checklist)
+    prof2 = build_profile("rater2", rubric, dataset.graded_examples(calib_rec, "rater2"),
+                          mock=args.mock, checklist=args.checklist)
 
     test_essays = dataset.essays(test_rec, rubric.set_id)
     human1 = {r["essay_id"]: r["rater1_holistic"] for r in test_rec}
@@ -134,6 +138,7 @@ def main():
         "config": {"mock": args.mock, "calib": args.calib, "threshold": args.threshold,
                    "n_test": len(test_essays), "n_scored": len(scored),
                    "n_abstained": len(graded) - len(scored),
+                   "checklist": args.checklist,
                    "model": "mock" if args.mock else os.environ.get("EDEXIA_MODEL", "claude-sonnet-4-5"),
                    "provider": "openai" if os.environ.get("EDEXIA_PROVIDER_URL") else "anthropic"},
         "claim_1_grades_like_teacher": {

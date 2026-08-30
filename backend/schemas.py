@@ -67,6 +67,11 @@ class TeacherProfile(BaseModel):
     trait_emphasis: dict[str, str] # trait name -> "high" | "medium" | "low"
     notes: str                     # free-text summary a human can read
     n_examples: int
+    # Optional binary decomposition of each trait: max_score yes/no questions per
+    # trait, ordered easiest→hardest, learned from THIS teacher's examples. When
+    # present, the grading engine counts yeses instead of asking for a 0-N rating —
+    # LLM judges are steadier on binary decisions than on ordinal scales.
+    checklist: Optional[dict[str, list[str]]] = None
 
 
 # ---------- Output ----------

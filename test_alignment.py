@@ -56,4 +56,12 @@ res = grade(essay, rubric, profile, mock=True)
 assert res.holistic_score == sum(j.score for j in res.trait_judgements)
 assert all(0 <= j.score <= 3 for j in res.trait_judgements)
 
+# 7. verbatim enforcement: a model quote with "corrected" spelling snaps back to
+# the student's real words; a fabricated quote is rejected, not trusted
+from backend.grading_engine import _snap_quote
+student = "I new I had to be patient. But I wanted to go home."
+assert _snap_quote("I new I had to be patient.", student) == "I new I had to be patient."
+assert _snap_quote("I knew I had to be patient.", student) == "I new I had to be patient."
+assert _snap_quote("The weather was lovely that entire afternoon outside.", student) is None
+
 print("all checks passed")

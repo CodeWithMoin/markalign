@@ -69,7 +69,50 @@ Your goal is to reverse-engineer the teacher's actual marking behavior from the 
 
 
 
-def _user_prompt(rubric: Rubric, examples: list[GradedExample]) -> str:
+def _checklist_spec(rubric: Rubric) -> str:
+    """Ask for a per-trait binary decomposition: max_score yes/no questions per
+    trait, ordered easiest→hardest, so a trait score becomes a count of yeses.
+    The questions must encode THIS teacher's bar (from the examples), not a
+    generic rubric — that is what keeps the checklist personalized."""
+    per_trait = ", ".join(f'"{t.name}": [<exactly {t.max_score} questions>]'
+                          for t in rubric.traits)
+    return (
+        ',\n  "checklist": {' + per_trait + "}\n"
+        "  // For each trait, write EXACTLY max_score yes/no questions about an essay,\n"
+        "  // ordered as a ladder: question 1 is the bar almost every essay this teacher\n"
+        "  // passed clears; the last question only their top-scored essays clear.\n"
+        "  // Derive each bar from what actually separated scores in the examples above\n"
+        "  // (e.g. if essays with a named, specific event scored higher on ideas, a\n"
+        "  // question is 'Does the essay describe one specific, concrete event?').\n"
+        "  // A trait score will be computed as the COUNT of yes answers, so the ladder\n"
+        "  // must be cumulative: an essay that clears question 3 also clears 1 and 2.\n"
+    )
+
+
+def _score_distribution(rubric: Rubric, examples: list[GradedExample]) -> str:
+    """Computed facts about how this teacher actually uses the scale — counted by
+    code, not left for the model to notice across 25 documents. The key fact for
+    ladder design: which scores the teacher never/rarely gives (the real floor)."""
+    lines = ["\nHOW THIS TEACHER USES THE SCALE (counted over the essays above):"]
+    for t in rubric.traits:
+        scores = [e.trait_scores[t.name] for e in examples if t.name in e.trait_scores]
+        if not scores:
+            continue
+        counts = {v: scores.count(v) for v in range(t.min_score, t.max_score + 1)}
+        used = ", ".join(f"{v}: {c}x" for v, c in counts.items())
+        floor = next((v for v in sorted(counts) if counts[v]), t.min_score)
+        lines.append(f"  - {t.name}: {used}"
+                     + (f"  (never goes below {floor} in this sample)" if floor > t.min_score else ""))
+    lines.append(
+        "Calibrate any per-trait ladder to this: if the teacher never or almost never "
+        "uses the bottom score, the FIRST question must be a bar nearly every essay "
+        "clears (their de-facto floor), and the ladder's spread should mirror where "
+        "their scores actually cluster.")
+    return "\n".join(lines) + "\n"
+
+
+def _user_prompt(rubric: Rubric, examples: list[GradedExample],
+                 checklist: bool = False) -> str:
     traits = "\n".join(f"  - {t.name}: {t.description}" for t in rubric.traits)
     lines = [f"TASK the students responded to:\n{rubric.prompt}",
              f"\nTRAITS this teacher weighs:\n{traits}",
@@ -83,6 +126,7 @@ def _user_prompt(rubric: Rubric, examples: list[GradedExample]) -> str:
         lines.append(ex.text[:1200])
         if ex.note:
             lines.append(f"[teacher's own note] {ex.note}")
+    lines.append(_score_distribution(rubric, examples))
     lines.append(
         f"\nNow summarise THIS teacher's standard as JSON. Each reward/penalty is a "
         "discriminating pattern WITH its evidence and how strong that evidence is:\n"
@@ -101,17 +145,21 @@ def _user_prompt(rubric: Rubric, examples: list[GradedExample]) -> str:
         '  "trait_emphasis": {trait_name: "high" | "medium" | "low"},  // which traits drive their score\n'
         '  "notes": str             // 1-2 sentences a human grader would recognise as true of them;\n'
         "                           // flag here if the sample was too small to be sure\n"
+        + (_checklist_spec(rubric) if checklist else "") +
         "}\n"
         "Every pattern must be visible across multiple essays above; mark thin evidence "
-        "as \"weak\" rather than dropping it. Output only the JSON."
+        "as \"weak\" rather than dropping it. When citing an essay in evidence, refer to "
+        "it by its score (e.g. \"the 12-scoring essay\", \"the essays scoring 4 and below\"), "
+        "never by its id — ids are internal and meaningless to a reader. Output only the JSON."
     )
     return "\n".join(lines)
 
 
 def build_profile(grader_id: str, rubric: Rubric,
-                  examples: list[GradedExample], *, mock: bool = False) -> TeacherProfile:
+                  examples: list[GradedExample], *, mock: bool = False,
+                  checklist: bool = False) -> TeacherProfile:
     raw = ma.complete_json(
-        SYSTEM, _user_prompt(rubric, examples),
+        SYSTEM, _user_prompt(rubric, examples, checklist=checklist and not mock),
         mock=mock, mock_kind="profile",
         ctx={"grader_id": grader_id,
              "traits": [t.name for t in rubric.traits],
@@ -126,4 +174,5 @@ def build_profile(grader_id: str, rubric: Rubric,
         trait_emphasis=raw["trait_emphasis"],
         notes=raw["notes"],
         n_examples=len(examples),
+        checklist=raw.get("checklist"),
     )
