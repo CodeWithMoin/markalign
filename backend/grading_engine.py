@@ -202,6 +202,7 @@ def _checklist_prompt(essay: Essay, rubric: Rubric, profile: TeacherProfile, anc
         '        "quote": <exact verbatim substring of the essay>, "reason": <one short sentence>}\n'
         "    ]}\n"
         "  ],\n"
+        f'  "holistic_score": <int {rubric.holistic_min}-{rubric.holistic_max}: the overall mark THIS teacher would give>,\n'
         '  "confidence": <float 0-1: how sure you are these answers match this teacher>,\n'
         '  "summary": <one sentence on how the essay meets or misses this teacher\'s bar>\n'
         "}\n"
@@ -230,8 +231,14 @@ def _grade_checklist(essay: Essay, rubric: Rubric, profile: TeacherProfile,
         if not spans:  # schema requires grounding; fall back to the essay opening
             spans = [Span(quote=essay.text[:60], reason="no checklist bar cleared for this trait")]
         judgements.append(TraitJudgement(trait=t.name, score=score, spans=spans))
-    total = sum(j.score for j in judgements)
-    holistic = max(rubric.holistic_min, min(rubric.holistic_max, total))
+    # holistic: the trait SUM when the label is constructed that way (set 7);
+    # otherwise the model's own holistic on the rubric's scale (e.g. set 1's 1-6)
+    if rubric.holistic_from_traits:
+        total = sum(j.score for j in judgements)
+        holistic = max(rubric.holistic_min, min(rubric.holistic_max, total))
+    else:
+        holistic = int(raw.get("holistic_score", rubric.holistic_min))
+        holistic = max(rubric.holistic_min, min(rubric.holistic_max, holistic))
     return GradingResult(
         essay_id=essay.essay_id, grader_id=profile.grader_id,
         trait_judgements=judgements, holistic_score=holistic,

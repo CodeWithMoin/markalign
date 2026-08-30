@@ -1,0 +1,101 @@
+{
+  "config": {
+    "mock": false,
+    "calib": 25,
+    "threshold": 0.6,
+    "n_test": 120,
+    "n_scored": 120,
+    "n_abstained": 0,
+    "checklist": true,
+    "model": "gpt-5.6-luna",
+    "provider": "openai"
+  },
+  "claim_1_grades_like_teacher": {
+    "qwk_vs_rater1": 0.369,
+    "exact_agreement": 0.15,
+    "within_1": 0.725
+  },
+  "claim_2_personalization": {
+    "qwk_fit_own_rater": 0.369,
+    "qwk_fit_other_rater": 0.367,
+    "gap": 0.003,
+    "note": "gap is small BY CONSTRUCTION \u2014 the two raters share a rubric."
+  },
+  "calibration_by_confidence": [
+    {
+      "confidence_band": "0.0-0.2",
+      "n": 0,
+      "mean_abs_error": null
+    },
+    {
+      "confidence_band": "0.2-0.4",
+      "n": 0,
+      "mean_abs_error": null
+    },
+    {
+      "confidence_band": "0.4-0.6",
+      "n": 0,
+      "mean_abs_error": null
+    },
+    {
+      "confidence_band": "0.6-0.8",
+      "n": 16,
+      "mean_abs_error": 1.44
+    },
+    {
+      "confidence_band": "0.8-1.0",
+      "n": 104,
+      "mean_abs_error": 1.09
+    }
+  ],
+  "confusion_vs_rater1": {
+    "1": {
+      "1": 0,
+      "2": 0,
+      "3": 1,
+      "4": 0,
+      "5": 0,
+      "6": 0
+    },
+    "2": {
+      "1": 0,
+      "2": 0,
+      "3": 3,
+      "4": 1,
+      "5": 0,
+      "6": 0
+    },
+    "3": {
+      "1": 0,
+      "2": 0,
+      "3": 1,
+      "4": 3,
+      "5": 12,
+      "6": 1
+    },
+    "4": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 2,
+      "5": 29,
+      "6": 18
+    },
+    "5": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 9,
+      "6": 34
+    },
+    "6": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 6
+    }
+  }
+}

@@ -27,6 +27,10 @@ eval-real:        ## real eval on ASAP set 7, 120 held-out essays, checklist gra
 eval-direct:      ## same eval with direct 0-N rating instead of the yes/no checklist
 	python3 -m eval.run_eval $(SET7) --calib 25 --max-test 120
 
+eval-set1:        ## generality check: same recipe on set 1 (persuasive, 1-6 scale)
+	python3 -m eval.run_eval --data data/asap_set1_essays.json --rubric data/asap_set1_rubric.json --calib 25 --max-test 120 --checklist --out eval_report_set1.json
+	python3 -m eval.calibrate --data data/asap_set1_essays.json --rubric data/asap_set1_rubric.json --report eval_report_set1.json --calib 25
+
 calibrate:        ## fit + apply scale calibration to the latest eval_report.json (uses .env; costs API)
 	python3 -m eval.calibrate $(SET7) --report eval_report.json --calib 25
 

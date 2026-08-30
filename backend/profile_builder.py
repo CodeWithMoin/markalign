@@ -94,6 +94,9 @@ def _score_distribution(rubric: Rubric, examples: list[GradedExample]) -> str:
     code, not left for the model to notice across 25 documents. The key fact for
     ladder design: which scores the teacher never/rarely gives (the real floor)."""
     lines = ["\nHOW THIS TEACHER USES THE SCALE (counted over the essays above):"]
+    hol = [e.holistic_score for e in examples]
+    hc = {v: hol.count(v) for v in range(rubric.holistic_min, rubric.holistic_max + 1) if hol.count(v)}
+    lines.append("  - holistic: " + ", ".join(f"{v}: {c}x" for v, c in sorted(hc.items())))
     for t in rubric.traits:
         scores = [e.trait_scores[t.name] for e in examples if t.name in e.trait_scores]
         if not scores:

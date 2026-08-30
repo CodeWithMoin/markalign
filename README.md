@@ -140,6 +140,41 @@ same harness surfaced that a bare QWK would hide:
 **Personalization:** own-rater vs other-rater gap **+0.03** — small *by
 construction* (the two raters share a rubric), which is the honest expected result.
 
+### Does it generalize? (ASAP set 1 — different genre, scale, and raters)
+
+To test whether the recipe was quietly overfit to set 7's quirks, the identical
+pipeline ran on **set 1**: persuasive letters instead of stories, a 1–6 holistic
+that is *not* a trait sum, no trait ground truth, and a different pair of human
+raters (who agree with each other at QWK 0.721 — coincidentally the same ceiling
+as set 7).
+
+| set 1, 120 held-out essays | QWK | % of ceiling | mean error (1–6) |
+|---|---|---|---|
+| raw | 0.369 | 51% | 1.13 |
+| **calibrated** | **0.576** | **80%** | **0.47** |
+
+**The raw number dropped, and that's the interesting part.** The diagnosis showed
+the same signature as sonnet-on-set-7, mirrored: the model *ranks* set-1 essays
+correctly (its mean rises monotonically with the human score at every level) but
+runs systematically **generous** and compressed — 5s and 6s for 109 of 120 essays
+where the humans center on 4. By this eval's own rule that is the *calibrate*
+case, and that prediction was stated **before** running the fix. It held:
+QWK 0.369 → 0.576, mean error halved, fitted only on the 25 calibration essays.
+
+That makes the calibrate/don't-calibrate rule three-for-three, with the third
+call made in advance on a task type it had never seen:
+
+| case | diagnosis | rule said | outcome |
+|---|---|---|---|
+| sonnet · set 7 | harsh, monotonic | calibrate | 0.40 → 0.47 ✓ |
+| luna · set 7 | already well-spread | don't | confirmed — it *hurt* (0.585 → 0.478) ✓ |
+| luna · set 1 | generous, monotonic | calibrate | **0.369 → 0.576** ✓ (predicted first) |
+
+Read honestly: the grader is strong on set 7 (92% of ceiling) and
+decent-after-calibration on set 1 (80%) — transfer is real but not free. What
+generalized *perfectly* is the measurement: on new data the eval identified why
+the grader was off and prescribed the fix that worked.
+
 > Why it matters here: moving beyond standardised senior English into per-department,
 > Years 7–10 assessment means learning **each grader's** standard from a handful of
 > examples — and expanding *without losing trust*. This measures exactly that: can it
@@ -215,6 +250,14 @@ converted sample is checked in so the pipeline is provably real offline.
 - **The two raters share a rubric**, so the personalization gap is small **by construction**. A small effect is the expected, honest result; a large one would be suspicious.
 - **Confidence is anti-calibrated, so the abstention gate is currently useless.** On the real run the model never reported confidence below the 0.6 threshold (0/120 abstentions), and its more-confident grades were *worse*: mean absolute error 3.13 in the 0.8–1.0 band vs 2.25 in the 0.6–0.8 band. The gate works, the signal driving it does not. Calibrating confidence — not just scores — is the next piece of work.
 - **Calibration is not a universal booster.** On the already-well-calibrated stronger grader the same scale transform *reduced* agreement (QWK 0.585 → 0.478); it only helps a model with a systematic offset, not one whose error is spread. So it's gated on the eval's systematic-vs-spread diagnosis, not applied by default (see Results).
+- **The profile learns teacher-and-task together, not the teacher alone.** All 25
+  calibration essays answer one assignment, so the learned standard entangles the
+  grader's taste (severity, floors, what they reward) with the task's requirements
+  (must be a story about patience). Parts of the profile are plausibly
+  teacher-general and parts are task-specific, but proving a teacher's standard
+  *transfers across tasks* needs the same identified grader on two different
+  assignments — data ASAP doesn't have ("rater1" is a column, not a person). The
+  set-1 run tests *method* generality, not teacher transfer.
 - **Reasoning-agreement is a method, not a validated result.** There is no reasoning ground truth in ASAP, so the taxonomy rests on hand-adjudication against documented labelling criteria — its credibility is in those criteria, not in a number. Score-agreement is the number you can trust; reasoning-agreement is the framework for the harder question.
 
 ---
