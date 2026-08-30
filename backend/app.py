@@ -10,7 +10,9 @@ import json
 import os
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException
+import time
+
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -45,6 +47,40 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], all
 # tiny in-process cache: grader_id -> profile
 _PROFILES: dict = {}
 
+# ---- usage guards: a public link must not be an open tap on the API key.
+#      Cached sample grades cost nothing and are never limited; these gates only
+#      cover grades that reach the model. In-process state suits the one-worker
+#      deploy; a multi-worker deploy would move this to a shared store. ----
+MAX_ESSAY_CHARS = 10_000                     # ~3x the longest real ASAP set-7 essay
+RATE_LIMIT = 6                               # live grades per IP...
+RATE_WINDOW = 10 * 60                        # ...per 10 minutes
+DAILY_CAP = int(os.environ.get("EDEXIA_DAILY_CAP", "200"))  # hard wallet ceiling
+_hits: dict[str, list[float]] = {}
+_day = {"date": "", "n": 0}
+
+
+def _guard_live_grade(req: Request, text: str) -> None:
+    """Raise 4xx before any model call: size, per-IP rate, global daily budget."""
+    if len(text) > MAX_ESSAY_CHARS:
+        raise HTTPException(413, f"essay too long ({len(text)} chars; limit {MAX_ESSAY_CHARS})")
+    if MOCK:
+        return                               # mock grading is free — no limits
+    ip = (req.headers.get("x-forwarded-for") or (req.client.host if req.client else "?")).split(",")[0].strip()
+    now = time.time()
+    recent = [t for t in _hits.get(ip, []) if now - t < RATE_WINDOW]
+    if len(recent) >= RATE_LIMIT:
+        raise HTTPException(429, "rate limit: a few live grades per 10 minutes — "
+                                 "the preloaded sample essays are unlimited")
+    today = time.strftime("%Y-%m-%d")
+    if _day["date"] != today:
+        _day.update(date=today, n=0)
+    if _day["n"] >= DAILY_CAP:
+        raise HTTPException(429, "daily live-grading budget reached — try tomorrow, "
+                                 "or explore the preloaded graded essays")
+    recent.append(now)
+    _hits[ip] = recent
+    _day["n"] += 1
+
 
 class CalibExample(BaseModel):
     text: str
@@ -66,9 +102,10 @@ def health():
 
 
 @app.post("/grade")
-def grade_endpoint(req: GradeRequest):
+def grade_endpoint(req: GradeRequest, request: Request):
     if not req.calibration:
         raise HTTPException(400, "need at least one calibration example")
+    _guard_live_grade(request, req.essay_text)
 
     examples = [
         GradedExample(essay_id=f"c{i}", text=c.text,
@@ -153,7 +190,7 @@ def demo():
 
 
 @app.post("/grade_own")
-def grade_own(req: OwnGrade):
+def grade_own(req: OwnGrade, request: Request):
     """Grade any essay (a sample or a pasted one) against the preloaded teacher.
     Sample essays are graded once and cached — a reload or shared link shows the
     same grade instantly instead of re-rolling the model."""
@@ -161,6 +198,7 @@ def grade_own(req: OwnGrade):
     is_sample = req.essay_id is not None and human is not None
     if is_sample and req.essay_id in _GRADES:
         return {"result": _GRADES[req.essay_id], "human_holistic": human}
+    _guard_live_grade(request, req.essay_text)   # only grades that reach the model
     prof = _demo_profile()
     essay = Essay(essay_id=req.essay_id or "live", set_id=DEMO_RUBRIC.set_id, text=req.essay_text)
     result = apply_gate(grade(essay, DEMO_RUBRIC, prof, anchors=_DEMO_ANCHORS, mock=MOCK), req.threshold)
