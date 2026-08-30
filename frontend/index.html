@@ -297,8 +297,10 @@ let samples=[], cur=0, holisticMax=6, traitMax=6, PROFILE=null;
 
 function renderSampleTabs(){
   const el=document.getElementById('sampleTabs'); if(!samples.length){el.innerHTML='';return;}
-  el.innerHTML='<span class="lbl">real essays this teacher marked:</span>'+samples.map((s,i)=>
-    `<button class="schip" onclick="loadSample(${i})">Essay ${i+1}<span class="sc"> · teacher ${s.human_holistic}/${holisticMax}</span></button>`).join('');
+  // The teacher's score is deliberately hidden here — the model grades blind, and
+  // the reveal (model vs teacher, side by side) happens on the results page.
+  el.innerHTML='<span class="lbl">real essays this teacher marked — the model grades blind, then you see the teacher\'s score:</span>'
+    +samples.map((s,i)=>`<button class="schip" onclick="loadSample(${i})">Essay ${i+1}</button>`).join('');
 }
 function autogrow(el){ el.style.height='auto'; el.style.height=el.scrollHeight+'px'; }
 function fillSample(i){
