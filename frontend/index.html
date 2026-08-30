@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alignment — grading the way one teacher grades</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23182338'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='20' font-style='italic' fill='%23b8791f' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f5f4f9; --paper-2:#efedf8; --ink:#0f172a; --navy:#010042; --ink-soft:#5f5f7d;
+    --line:#e7e4f3; --ground:#5139fa; --ground-bg:#ece9fe; --ground-soft:#d8d2fc;
+    --good:#2f9e6b; --warn:#8a6300; --warn-bg:#fbf1d6; --warn-soft:#f0deac; --white:#ffffff;
+    --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --serif:"Playfair Display",Georgia,serif;
+    --ease:cubic-bezier(.4,0,.2,1); --shadow:0 1px 2px rgba(1,0,66,.05);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;
+    -webkit-font-smoothing:antialiased;background:var(--paper);
+    background-image:radial-gradient(1100px 560px at 50% -8%, #ece7ff 0%, rgba(236,231,255,0) 62%);
+    background-attachment:fixed}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px 96px}
+  a{color:var(--ground)}
+
+  /* ---- top brand bar ---- */
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:22px 0 0}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:17px;color:var(--navy);
+    letter-spacing:-.01em}
+  .brand .mk{width:15px;height:15px;border-radius:4px;background:var(--ground);
+    transform:rotate(45deg);box-shadow:0 0 0 3px var(--ground-bg)}
+  .tag{font-size:12.5px;color:var(--ink-soft)}
+
+  /* ---- masthead / thesis (centered, Edexia-style) ---- */
+  header{padding:56px 0 30px;text-align:center}
+  h1{font-family:var(--serif);font-weight:600;color:var(--navy);
+    font-size:clamp(38px,6.4vw,70px);line-height:1.03;margin:0 0 .32em;letter-spacing:-.02em}
+  h1 em{font-style:italic;color:var(--ground)}
+  .sub{font-size:clamp(16px,2.1vw,19px);color:var(--ink-soft);max-width:56ch;margin:0 auto;line-height:1.55}
+  .dot{display:inline-block;width:7px;height:7px;border-radius:50%;
+    background:var(--good);margin-right:2px;vertical-align:middle}
+
+  /* ---- the composer: Edexia-style paste card ---- */
+  .composer{background:var(--white);border:1px solid var(--line);border-radius:20px;
+    box-shadow:0 12px 34px rgba(0,0,0,.07);padding:6px;max-width:900px;margin:8px auto 0}
+  .composer textarea{border:none;border-radius:16px;width:100%;min-height:150px;
+    font-family:var(--sans);font-size:16px;line-height:1.65;padding:22px 24px;
+    background:transparent;color:var(--ink);resize:none;overflow:hidden}
+  .composer textarea::placeholder{color:#9a99b8}
+  .composer textarea:focus{outline:none;box-shadow:none}
+  .composer-bar{display:flex;align-items:center;justify-content:space-between;gap:14px;
+    padding:12px 14px 12px 20px;border-top:1px solid var(--line);flex-wrap:wrap}
+  .cmeta{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-soft);font-weight:500}
+  .cbtns{display:flex;gap:10px;align-items:center}
+  .cbtns button{display:inline-flex;align-items:center;gap:7px}
+  .cbtns .ghost svg{width:15px;height:15px}
+  .samples{display:flex;flex-wrap:wrap;gap:8px;align-items:center;max-width:900px;
+    margin:16px auto 0;justify-content:center}
+  .samples .lbl{font-size:12px;color:var(--ink-soft);margin-right:2px}
+  .schip{font-size:12.5px;font-weight:600;color:var(--ink);background:var(--white);
+    border:1px solid var(--line);border-radius:999px;padding:7px 14px;cursor:pointer;
+    transition:border-color .12s var(--ease),color .12s var(--ease),background .12s var(--ease)}
+  .schip:hover{border-color:var(--ground);color:var(--ground)}
+  .schip.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .schip .sc{opacity:.62;font-weight:500}
+  .schip.on .sc{opacity:.8}
+  .backbar{margin:4px 0 14px}
+  .back{display:inline-flex;align-items:center;gap:6px}
+  .back svg{width:15px;height:15px}
+
+  /* ---- layout ---- */
+  .cols{display:grid;grid-template-columns:1fr;gap:40px;margin-top:40px}
+  @media(min-width:860px){.cols{grid-template-columns:minmax(0,1fr) 300px}}
+  h2{font-family:var(--sans);font-weight:600;font-size:18px;letter-spacing:-.01em;
+    color:var(--ink);margin:0 0 5px;display:flex;align-items:center}
+  h2 .n{display:inline-flex;align-items:center;justify-content:center;font-weight:600;
+    font-size:11px;color:var(--ground);background:var(--ground-bg);border-radius:999px;
+    padding:3px 9px;margin-right:11px}
+  .hint{font-size:13.5px;color:var(--ink-soft);margin:0 0 14px;line-height:1.5}
+
+  label{display:block;font-size:11px;font-weight:600;letter-spacing:.07em;
+    text-transform:uppercase;color:var(--ink-soft);margin:0 0 6px}
+  textarea,input{width:100%;font-family:var(--sans);font-size:15px;color:var(--ink);
+    background:var(--white);border:1px solid var(--line);border-radius:12px;padding:12px 14px;
+    resize:vertical;transition:border-color .12s var(--ease),box-shadow .12s var(--ease)}
+  textarea:focus,input:focus{outline:none;border-color:var(--ground);
+    box-shadow:0 0 0 3px var(--ground-bg)}
+
+  .calib{border:1px solid var(--line);background:var(--white);border-radius:14px;
+    padding:14px;margin-bottom:11px;box-shadow:var(--shadow)}
+  .calib .row{display:grid;grid-template-columns:1fr 92px;gap:10px;align-items:start}
+  .calib textarea{min-height:92px;font-size:14px;line-height:1.5}
+
+  button{font-family:var(--sans);font-weight:600;font-size:14px;cursor:pointer;
+    border:1px solid var(--navy);background:var(--navy);color:#fff;padding:12px 24px;
+    border-radius:999px;transition:transform .1s var(--ease),background .12s var(--ease),box-shadow .12s var(--ease)}
+  button:hover{background:#0b0a63;box-shadow:0 6px 16px rgba(0,0,0,.16)}
+  button:active{transform:translateY(1px)}
+  button:disabled{opacity:.5;cursor:progress;box-shadow:none}
+  .ghost{background:var(--ground-bg);color:var(--ground);border-color:transparent;
+    padding:9px 16px;font-size:13px}
+  .ghost:hover{background:var(--ground-soft);box-shadow:none}
+
+  /* ---- the signature: the marked-up manuscript ---- */
+  .result{margin-top:44px;border-top:1px solid var(--line);padding-top:36px;display:none}
+  .result.on{display:block}
+  .scores{display:flex;flex-wrap:wrap;gap:11px;align-items:stretch;margin-bottom:28px}
+  .chip{border:1px solid var(--line);background:var(--white);border-radius:14px;
+    padding:12px 16px;min-width:96px;box-shadow:var(--shadow)}
+  .chip .k{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-soft)}
+  .chip .v{font-weight:700;font-size:26px;line-height:1.1;color:var(--ink);margin-top:2px}
+  .chip.big{background:var(--navy);color:#fff;border-color:var(--navy);min-width:122px}
+  .chip.big .k{color:#a9a8d8}
+  .chip.big .v{font-family:var(--serif);font-weight:600;font-size:46px;color:#fff}
+  .flag{display:inline-flex;align-items:center;gap:8px;align-self:center;font-weight:600;
+    font-size:13px;padding:9px 16px;border-radius:999px;line-height:1}
+  .flag svg{width:15px;height:15px;flex:none}
+  .flag .lo{font-weight:500;opacity:.72}
+  .flag.review{background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn-soft)}
+  .flag.scored{background:#e4f5ec;color:var(--good);border:1px solid #c3e8d3}
+
+  .manuscript{display:grid;grid-template-columns:1fr;gap:0}
+  @media(min-width:860px){.manuscript{grid-template-columns:1fr 264px}}
+  .essay{font-size:16.5px;line-height:1.8;padding:24px 28px;background:var(--white);
+    border:1px solid var(--line);border-radius:16px 16px 0 0}
+  @media(min-width:860px){.essay{border-radius:16px 0 0 16px;border-right:none}}
+  /* the highlighter draws itself across the cited span, in sequence */
+  mark{background-color:transparent;
+    background-image:linear-gradient(transparent 56%, var(--ground-soft) 56%);
+    background-repeat:no-repeat;background-size:0% 100%;color:inherit;cursor:pointer;
+    padding:0 .05em;border-radius:2px;animation:draw .5s var(--ease) forwards;
+    animation-delay:var(--d,0ms);transition:background-color .18s var(--ease)}
+  @keyframes draw{to{background-size:100% 100%}}
+  mark.hot{background-color:var(--ground-bg);background-size:100% 100%}
+  .num{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;
+    font-size:9.5px;font-weight:700;color:#fff;background:var(--ground);border-radius:999px;
+    padding:0 3px;vertical-align:super;margin-left:3px;font-family:var(--sans);line-height:1}
+  .margin{background:var(--paper-2);border:1px solid var(--line);border-radius:0 0 16px 16px;padding:8px 18px}
+  @media(min-width:860px){.margin{border-radius:0 16px 16px 0}}
+  .anno{font-size:13.5px;padding:12px 0;border-bottom:1px solid var(--line);cursor:pointer;
+    animation:annoIn .5s var(--ease) both;animation-delay:var(--d,0ms);
+    transition:background-color .18s var(--ease);margin:0 -18px;padding-left:18px;padding-right:18px}
+  @keyframes annoIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+  .anno.lit{background:var(--ground-bg)}
+  .result.on{animation:fadeIn .5s var(--ease) both}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  @media (prefers-reduced-motion:reduce){
+    .anno,.result.on{animation:none}
+    mark{animation:none;background-size:100% 100%}}
+  .anno:last-child{border-bottom:none}
+  .anno .num{vertical-align:middle;margin:0 8px 0 0}
+  .anno .t{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ground)}
+  .anno .s{float:right;font-weight:700;font-size:15px;color:var(--ink)}
+  .anno .q{color:var(--ink-soft);font-style:italic;margin-top:4px;line-height:1.45}
+
+  .profile{margin-top:28px;background:var(--white);border:1px solid var(--line);
+    border-radius:16px;padding:20px 22px;box-shadow:var(--shadow)}
+  .profile h3{font-family:var(--sans);font-weight:700;font-size:16px;margin:0 0 8px;color:var(--ink)}
+  .profile ul{margin:6px 0 0;padding-left:18px;font-size:14px}
+  .profile li{margin-bottom:9px}
+  .profile .stg{font-size:10px;font-weight:600;color:var(--ground);background:var(--ground-bg);
+    padding:1px 8px;border-radius:999px;margin-left:7px;vertical-align:1px;text-transform:capitalize}
+  .profile .pq{color:var(--ink-soft);font-style:italic;font-size:12.5px;margin-top:3px;line-height:1.45}
+  .profile .sev{font-weight:600;font-size:12px;background:var(--ground-bg);color:var(--ground);
+    padding:3px 10px;border-radius:999px;text-transform:capitalize}
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:12px}
+  @media(max-width:620px){.twocol{grid-template-columns:1fr}}
+  /* ---- alignment scorecard: the eval substance, on the page ---- */
+  .align{margin-top:56px;padding-top:40px;border-top:1px solid var(--line)}
+  .align h2{font-family:var(--serif);font-weight:600;font-size:clamp(24px,3.6vw,34px);
+    letter-spacing:-.01em;color:var(--navy);margin:0 0 8px;display:block}
+  .align h2 em{font-style:italic;color:var(--ground)}
+  .align .lead{font-size:15px;color:var(--ink-soft);margin:0 0 26px;max-width:64ch;line-height:1.6}
+  .acard{display:grid;grid-template-columns:1fr;gap:18px}
+  @media(min-width:760px){.acard{grid-template-columns:1fr 1fr}}
+  .apanel{background:var(--white);border:1px solid var(--line);border-radius:16px;
+    padding:22px 24px;box-shadow:var(--shadow)}
+  .apanel .cap{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--ink-soft);margin:0 0 14px}
+  .qwk{font-family:var(--serif);font-weight:600;font-size:56px;line-height:1;color:var(--navy)}
+  .qwk small{font-family:var(--sans);font-size:14px;font-weight:600;color:var(--ink-soft);margin-left:7px}
+  .track{height:8px;border-radius:999px;background:var(--paper-2);margin:18px 0 12px;overflow:hidden}
+  .track>span{display:block;height:100%;width:100%;border-radius:999px;background:var(--ground);
+    transform:scaleX(0);transform-origin:left center;transition:transform .6s var(--ease)}
+  .arow{display:flex;justify-content:space-between;gap:16px;font-size:13px;color:var(--ink-soft);
+    padding:5px 0;border-top:1px solid var(--line)}
+  .arow:first-of-type{border-top:none}
+  .arow b{color:var(--ink);font-weight:700}
+  .tax{display:flex;height:28px;border-radius:8px;overflow:hidden;margin:2px 0 14px;background:var(--paper-2)}
+  .tax>span{display:block;min-width:2px}
+  .legend{display:flex;flex-wrap:wrap;gap:10px 16px;font-size:12.5px;color:var(--ink-soft)}
+  .legend .k{display:inline-flex;align-items:center;gap:6px}
+  .legend .sw{width:10px;height:10px;border-radius:3px;flex:none}
+  .headline{font-size:14px;color:var(--ink);margin:16px 0 0;line-height:1.55}
+  .headline b{color:var(--navy);font-weight:700}
+  .asrc{font-size:12.5px;color:var(--ink-soft);margin-top:22px}
+  .asrc b{color:var(--ink);font-weight:600}
+  .err{color:#c0362b;font-size:14px;margin-top:12px}
+  footer{margin-top:80px;padding-top:24px;border-top:1px solid var(--line);
+    font-size:13px;color:var(--ink-soft);line-height:1.6}
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:.92em;
+    background:var(--ground-bg);color:var(--ground);padding:1px 6px;border-radius:5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="topbar">
+    <div class="brand"><span class="mk"></span>Alignment</div>
+    <div class="tag">a grading-alignment method demo</div>
+  </nav>
+  <div id="composeView">
+  <header>
+    <h1>Did it grade like the teacher —<br>or just <em>get lucky?</em></h1>
+    <p class="sub">It learns one teacher's marking standard, grades a student essay the same way,
+      and shows the exact lines behind every score.</p>
+  </header>
+
+  <div class="composer">
+    <textarea id="essay" oninput="autogrow(this)" placeholder="Paste a student essay, or load a real sample below…"></textarea>
+    <div class="composer-bar">
+      <span class="cmeta"><span class="dot"></span><span id="mode">loading…</span></span>
+      <div class="cbtns">
+        <button class="ghost" id="sampleBtn" onclick="cycleSample()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/></svg>
+          Use a sample essay</button>
+        <button id="go" onclick="run()">Grade essay</button>
+      </div>
+    </div>
+  </div>
+  <div class="samples" id="sampleTabs"></div>
+  <div id="err" class="err"></div>
+  </div><!-- /composeView -->
+
+  <div id="resultView" hidden>
+  <div class="backbar"><button class="ghost back" onclick="showCompose()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    Grade another essay</button></div>
+
+  <div id="result" class="result">
+    <div class="scores" id="scores"></div>
+    <h2 style="margin-bottom:10px">Every score, grounded in the text</h2>
+    <p class="hint">Each highlight is a line the grader cited — hover a margin note to find its evidence in the essay.</p>
+    <div class="manuscript">
+      <div class="essay" id="marked"></div>
+      <div class="margin" id="annos"></div>
+    </div>
+
+    <div class="profile" id="profileBox">
+      <h3>The standard it inferred <span class="sev" id="sev"></span></h3>
+      <div class="twocol">
+        <div><label>rewards</label><ul id="rewards"></ul></div>
+        <div><label>penalizes</label><ul id="penalizes"></ul></div>
+      </div>
+      <p class="hint" id="pnotes" style="margin-top:12px"></p>
+    </div>
+  </div>
+
+  <section class="align" id="align" hidden>
+    <h2>How aligned is it, <em>really?</em></h2>
+    <p class="lead">Two questions, measured apart. Did it match the teacher's marks? And when it was wrong,
+      was it a fixable pattern or just noise? These are from the held-out evaluation — not this one essay.</p>
+    <div class="acard">
+      <div class="apanel">
+        <div class="cap">Score-agreement · vs the teacher</div>
+        <div class="qwk" id="qwkVal">—</div>
+        <div class="track"><span id="qwkBar"></span></div>
+        <div class="arow"><span>quadratic weighted kappa (QWK)</span></div>
+        <div class="arow" id="calRow" hidden><span>after scale calibration</span><b id="qwkCal">—</b></div>
+        <div class="arow"><span>within 1 mark</span><b id="within1">—</b></div>
+        <div class="arow"><span>personalization gap · own vs other rater</span><b id="pgap">—</b></div>
+      </div>
+      <div class="apanel">
+        <div class="cap">Reasoning-agreement · right for the right reason?</div>
+        <div class="tax" id="taxBar"></div>
+        <div class="legend" id="taxLegend"></div>
+        <p class="headline" id="taxHead"></p>
+      </div>
+    </div>
+    <p class="asrc" id="asrc"></p>
+  </section>
+  </div><!-- /resultView -->
+
+  <footer>
+    Score-agreement is measured with quadratic weighted kappa against held-out human marks.
+    Reasoning-agreement — whether the grade is right for the <em>right reason</em> — is the part the
+    dataset can't verify, and is adjudicated by hand. Run <span class="mono">python -m eval.run_eval</span>
+    for the numbers. Method demo on public essay data; not a claim about any specific curriculum.
+  </footer>
+</div>
+
+<script>
+// ---- preloaded demo: a real teacher + real ASAP essays, graded on arrival ----
+let samples=[], cur=0, holisticMax=6, traitMax=6, PROFILE=null;
+
+function renderSampleTabs(){
+  const el=document.getElementById('sampleTabs'); if(!samples.length){el.innerHTML='';return;}
+  el.innerHTML='<span class="lbl">real essays this teacher marked:</span>'+samples.map((s,i)=>
+    `<button class="schip" onclick="loadSample(${i})">Essay ${i+1}<span class="sc"> · teacher ${s.human_holistic}/${holisticMax}</span></button>`).join('');
+}
+function autogrow(el){ el.style.height='auto'; el.style.height=el.scrollHeight+'px'; }
+function fillSample(i){
+  if(!samples.length) return;
+  cur=(i+samples.length)%samples.length;
+  const t=document.getElementById('essay'); t.value=samples[cur].text; autogrow(t);
+  document.querySelectorAll('.schip').forEach((c,j)=>c.classList.toggle('on',j===cur));
+}
+function loadSample(i){ fillSample(i); run(); }        // sample chip → fill, grade, go to results
+function cycleSample(){ fillSample(cur+1); document.getElementById('essay').focus(); }
+function showResults(){ document.getElementById('composeView').hidden=true;
+  document.getElementById('resultView').hidden=false; scrollTo({top:0}); }
+function showCompose(){ document.getElementById('resultView').hidden=true;
+  document.getElementById('composeView').hidden=false; scrollTo({top:0}); }
+
+fetch('/demo').then(r=>r.json()).then(d=>{
+  samples=d.samples||[]; PROFILE=d.profile; holisticMax=d.holistic_max||6; traitMax=d.trait_max||6;
+  renderSampleTabs();
+  if(samples.length) fillSample(0);          // pre-fill the box; grading happens on click
+}).catch(()=>{ document.getElementById('err').textContent='Backend unreachable — start the server.'; });
+
+fetch('/health').then(r=>r.json()).then(h=>{
+  document.getElementById('mode').textContent =
+    h.mock ? "demo grader · no API key" : "live model grading";
+}).catch(()=>{ document.getElementById('mode').textContent="backend offline"; });
+
+// ---- alignment scorecard: pull the frozen eval report onto the page ----
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const pct=x=>Math.round((x||0)*100);
+fetch('/eval').then(r=>r.json()).then(d=>{
+  if(!d.available) return;                       // no eval run yet → stay hidden
+  document.getElementById('align').hidden=false;
+  const c1=d.claim_1_grades_like_teacher||{}, c2=d.claim_2_personalization||{}, cfg=d.config||{};
+  const qwk=c1.qwk_vs_rater1;
+  document.getElementById('qwkVal').innerHTML=(qwk!=null?qwk.toFixed(2):'—')+'<small>/ 1.00</small>';
+  document.getElementById('qwkBar').style.transform='scaleX('+Math.max(0,Math.min(1,qwk||0))+')';
+  if(d.calibration&&d.calibration.calibrated_qwk!=null){
+    document.getElementById('calRow').hidden=false;
+    document.getElementById('qwkCal').textContent=d.calibration.calibrated_qwk.toFixed(2)+' QWK';
+  }
+  document.getElementById('within1').textContent=c1.within_1!=null?pct(c1.within_1)+'%':'—';
+  document.getElementById('pgap').textContent=c2.gap!=null?(c2.gap>=0?'+':'')+c2.gap.toFixed(2)+' QWK':'—';
+
+  const c3=d.claim_3_reasoning_agreement;
+  const segs=[
+    ['correct_score_grounded','right & grounded',css('--good')],
+    ['correct_abstention','abstained (correct call)','#8a89c9'],
+    ['correct_score_ungrounded','lucky',css('--warn')],
+    ['wrong_systematic','wrong · systematic',css('--ground')],
+    ['wrong_random','wrong · random','#c2c1d6'],
+  ];
+  if(c3&&c3.share){
+    const bar=document.getElementById('taxBar'),leg=document.getElementById('taxLegend');
+    bar.innerHTML='';leg.innerHTML='';
+    segs.forEach(([k,label,col])=>{
+      const v=c3.share[k]||0;
+      if(v>0){const s=document.createElement('span');s.style.flexGrow=v;s.style.background=col;s.title=`${label} ${pct(v)}%`;bar.appendChild(s);}
+      leg.innerHTML+=`<span class="k"><span class="sw" style="background:${col}"></span>${label} ${pct(v)}%</span>`;
+    });
+    const sys=c3.of_wrong_share_systematic;
+    document.getElementById('taxHead').innerHTML = sys!=null
+      ? `Of its wrong grades, <b>${pct(sys)}%</b> are a fixable systematic pattern, not noise — the eval catching a real, correctable flaw.`
+      : `Lucky rate <b>${pct(c3.lucky_rate)}%</b> — right score, but the reasons didn't hold up.`;
+  }else{
+    document.getElementById('taxBar').style.display='none';
+    document.getElementById('taxHead').innerHTML='Run <span class="mono">python -m eval.run_eval --adjudicate 60</span> to populate the reasoning taxonomy.';
+  }
+  const n=cfg.n_scored||cfg.n_test||'—';
+  document.getElementById('asrc').innerHTML=`Measured on <b>${n}</b> held-out essays · `
+    +(cfg.mock?'demo grader (deliberate length-bias)':'live model grading')
+    +` · reproduce with <span class="mono">python -m eval.run_eval</span>`;
+}).catch(()=>{});
+
+function esc(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
+
+function markUp(text, judgements){
+  // highlight each cited span; attach an index so margin notes can link
+  let html = text.replace(/</g,'&lt;');
+  let idx=0; const notes=[];
+  judgements.forEach(tj=>{
+    tj.spans.forEach(sp=>{
+      const q = sp.quote.replace(/</g,'&lt;').trim();
+      if(!q) return;
+      const re = new RegExp(esc(q)); const i = idx;
+      if(re.test(html)){
+        html = html.replace(re, m=>`<mark data-i="${i}" style="--d:${i*170}ms"`
+          +` onmouseenter="lite(${i},1)" onmouseleave="lite(${i},0)">${m}`
+          +`<sup class="num">${i+1}</sup></mark>`);
+      }
+      notes.push({i:idx, trait:tj.trait, score:tj.score, quote:sp.quote, reason:sp.reason});
+      idx++;
+    });
+  });
+  return {html, notes};
+}
+
+async function run(){
+  const btn=document.getElementById('go'), err=document.getElementById('err');
+  err.textContent=''; btn.disabled=true; btn.textContent='grading…';
+  try{
+    const text=document.getElementById('essay').value;
+    if(!text.trim()){ err.textContent='Paste an essay or load a sample first.'; return; }
+    // if the box still holds the current sample verbatim, pass its id so we can
+    // show the teacher's real mark next to the model's
+    const sid=(samples[cur] && text===samples[cur].text) ? samples[cur].essay_id : null;
+    const res=await fetch('/grade_own',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({essay_text:text, essay_id:sid, threshold:0.6})});
+    if(!res.ok) throw new Error((await res.json()).detail||res.statusText);
+    const {result,human_holistic}=await res.json();
+    show(result, human_holistic);
+    showResults();
+  }catch(e){ err.textContent="Couldn't grade: "+e.message; }
+  finally{ btn.disabled=false; btn.textContent='Grade essay'; }
+}
+
+const ICON_FLAG=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V4s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>`;
+const ICON_CHECK=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+
+function show(result, human){
+  const conf=Math.round(result.confidence*100);
+  const scores=document.getElementById('scores');
+  let s=`<div class="chip big"><div class="k">model holistic</div><div class="v">${result.holistic_score}<span style="font-size:15px;opacity:.6">/${holisticMax}</span></div></div>`;
+  if(human!=null)
+    s+=`<div class="chip"><div class="k">teacher gave</div><div class="v">${human}<span style="font-size:14px;color:var(--ink-soft)">/${holisticMax}</span></div></div>`;
+  result.trait_judgements.forEach(tj=>{
+    s+=`<div class="chip"><div class="k">${tj.trait}</div><div class="v">${tj.score}<span style="font-size:14px;color:var(--ink-soft)">/${traitMax}</span></div></div>`;
+  });
+  s+=`<div class="chip"><div class="k">confidence</div><div class="v">${conf}<span style="font-size:14px;color:var(--ink-soft)">%</span></div></div>`;
+  // one context-appropriate flag: gate first, else teacher-agreement
+  if(result.abstained)
+    s+=`<span class="flag review">${ICON_FLAG}Held for teacher review<span class="lo">· ${conf}%</span></span>`;
+  else if(human!=null){
+    const diff=Math.abs(result.holistic_score-human);
+    s+= diff===0 ? `<span class="flag scored">${ICON_CHECK}Matches the teacher</span>`
+      : diff===1 ? `<span class="flag scored">${ICON_CHECK}Within 1 mark of the teacher</span>`
+      : `<span class="flag review">${ICON_FLAG}Off by ${diff} vs the teacher</span>`;
+  } else
+    s+=`<span class="flag scored">${ICON_CHECK}Auto-scored<span class="lo">· ${conf}% confident</span></span>`;
+  scores.innerHTML=s;
+
+  const {html,notes}=markUp(document.getElementById('essay').value, result.trait_judgements);
+  document.getElementById('marked').innerHTML=html;
+
+  const annos=document.getElementById('annos');
+  annos.innerHTML = notes.map(n=>`<div class="anno" data-i="${n.i}"
+      style="--d:${n.i*170+80}ms"
+      onmouseenter="lite(${n.i},1)" onmouseleave="lite(${n.i},0)">
+      <span class="s">${n.score}/${traitMax}</span><span class="num">${n.i+1}</span><span class="t">${n.trait}</span>
+      <div class="q">"${n.quote.slice(0,70)}${n.quote.length>70?'…':''}"</div>
+      <div>${n.reason}</div></div>`).join('') || '<p class="hint">No spans cited.</p>';
+
+  if(PROFILE){
+    document.getElementById('sev').textContent=PROFILE.severity;
+    const pat=x=>typeof x==='string'?`<li>${x}</li>`
+      :`<li><span style="font-weight:600">${x.pattern}</span>`
+       +(x.strength?`<span class="stg">${x.strength}</span>`:'')
+       +(x.evidence?`<div class="pq">${x.evidence}</div>`:'')+`</li>`;
+    document.getElementById('rewards').innerHTML=PROFILE.rewards.map(pat).join('');
+    document.getElementById('penalizes').innerHTML=PROFILE.penalizes.map(pat).join('');
+    document.getElementById('pnotes').textContent=PROFILE.notes;
+  }
+
+  document.getElementById('result').classList.add('on');
+}
+function lite(i,on){
+  document.querySelectorAll(`mark[data-i="${i}"]`).forEach(m=>m.classList.toggle('hot',!!on));
+  document.querySelectorAll(`.anno[data-i="${i}"]`).forEach(a=>a.classList.toggle('lit',!!on));
+}
+</script>
+</body>
+</html>

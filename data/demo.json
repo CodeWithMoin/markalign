@@ -1,0 +1,149 @@
+{
+  "rubric": {
+    "set_id": "asap-set-7",
+    "prompt": "Write a story about a time when you were patient, or a time when someone you know was patient.",
+    "traits": [
+      {
+        "name": "ideas",
+        "description": "Development, focus and detail of the story",
+        "min_score": 0,
+        "max_score": 3
+      },
+      {
+        "name": "organization",
+        "description": "Structure, sequencing and coherence",
+        "min_score": 0,
+        "max_score": 3
+      },
+      {
+        "name": "style",
+        "description": "Word choice, sentence fluency and voice",
+        "min_score": 0,
+        "max_score": 3
+      },
+      {
+        "name": "conventions",
+        "description": "Grammar, usage, spelling and mechanics",
+        "min_score": 0,
+        "max_score": 3
+      }
+    ],
+    "holistic_min": 0,
+    "holistic_max": 12,
+    "holistic_from_traits": true
+  },
+  "calibration": [
+    {
+      "text": "I was patient the my game it take to long got my so I got so my puch my big tr because. Was make me mad then my mom had come up with she hint I ean down the stilts got mom money she buy me trall my huse she take the her way I patient now the end. I\u0092m patient to go lunch I got many b lunch so I got many huse to go to lunch so don\u0092t take bep for some guess now many hours I\u0092ll lunch I\u0092m mad to ??? it many till lunch now when is doing the test so forgot to ask for some gam over it is many we go to lunch it many we got to lunch now heard line I got he patient for ??? She me we she made my sleb so good ate I\u0092ll of it then dinck my milk then we tried to be patient for ??? my taken mis greetees I was happy than ever.",
+      "holistic_score": 2,
+      "trait_scores": {
+        "ideas": 1,
+        "organization": 1,
+        "style": 0,
+        "conventions": 0
+      }
+    },
+    {
+      "text": "I\u0092m writing about a time when I was patient. Because I was about to go to a party in I had to be patient but I didn\u0092t I had got angry in I just couldn\u0092t patients. In I also no someone who patient. They just couldn\u0092t wait they really couldn\u0092t wait but I waited, waited, waited in I got mad I couldn\u0092t even wait no longer. I was actually was waiting on my aunt to come pick me up in she didn\u0092t I called my mom in she said she was going to take me to the party In I was patient in she didn\u0092t come I didn\u0092t go to the party in I was mad. Because my mama didnt come pick me up, I calling my grandma and she came in pick up. That was the only time I was patient of learning.",
+      "holistic_score": 3,
+      "trait_scores": {
+        "ideas": 1,
+        "organization": 1,
+        "style": 1,
+        "conventions": 0
+      }
+    },
+    {
+      "text": "In some point you have to be patient. If you are in a line need to be patient. you have to be patient to waiting for a share to part. You have to be patient if something is coming in the mid and you can as wait to what is or you no what it is and you just can\u0092t ran to get it. When you go to the store and you see some thing you want and have mom or dad say they will git you for your brithbay then you can no wait for you bathbay then you can no wait for you birthday.Well I have been there . I love crismase because you got almose everything you want; When something you to do something you have been wanting forever you are going there for the first time. All of these thing you have to be patient.",
+      "holistic_score": 4,
+      "trait_scores": {
+        "ideas": 0,
+        "organization": 1,
+        "style": 2,
+        "conventions": 1
+      }
+    },
+    {
+      "text": "I remember a time when I was patient. I use to be able to wait for anything.one time I was so patient I asked my mom for a game and she said, tomorrow and she got the game the day I asked her. At one time I thought I was the most patient person In my whole family. I am so patient I can wait a month just before I go to cedar point. You have to be burn with patient. Some of my friends are patient but they can\u0092t wait as long as I can. Some of them even ask me to teach them how to be patient. I say the same thing to them what I say to everybody who asked me about being patient. You have to be born with patient. Its not something you learn over the years. I could want three week without getting paid from my dad. As some people get older there grow lesser. That doesn\u0092t work on everybody. But sometime soon I know my patient will be like everyone else when I get older. Who knows maybe somebody might be more patient than me I the world.",
+      "holistic_score": 6,
+      "trait_scores": {
+        "ideas": 0,
+        "organization": 1,
+        "style": 2,
+        "conventions": 3
+      }
+    },
+    {
+      "text": "Patience can mean a lot of things. It can mean to be understanding or it can mean to be tolerant. Being patient can also mean you don\u0092t complain. Like if you ask someone to get you something and they say that they will get it in a certain amount of days. If they don\u0092t get it the day they said they would and you were expecting it then you should\u0092nt get mad. You can also be paitient if you have to wait for something. If you are getting a new pair of shoes but the only way you can get them is they have to be ordered. You should not start to complain if it takes a long time. You should be able to wait without getting angry that you don\u0092t have them yet. Being patient can mean all of these things. If you do these things you can tell that you are patient. That is what being patient means.",
+      "holistic_score": 7,
+      "trait_scores": {
+        "ideas": 1,
+        "organization": 2,
+        "style": 2,
+        "conventions": 2
+      }
+    },
+    {
+      "text": "One night when I got home from cheer I was starving, and the dinner wasn\u0092t even on the grill. We were having steak, brown rice, and mack and chees. To past time I went upstairs to take a shower I took ten minutes to take a shower and it still wasn\u0092t ready. So I did some homework. I did math, reading, and I study for a test. The mack and chees was ready the steak was almost ready and the brown rice wasn\u0092t even close to being ready. I was so hungry and tried, but I keeped my patient. Oh my gosh the food smelt so yummy. I wanted to eat right then. I was so hungry that I had to put gum into my mouth to keep my mouth busy. Two minutes later the steak was ready mack and chees was ready but we are still waiting for the brown rice. My sister and I set the table and pourd our drinks I still had my patient. Five minutes later the food was ready. All four of us sat down at the dinner table and ate. Oh my gosh it was so yummy. I had two little pieces of steak, three scoups of rice, I love rice, and a tiny piece of mack and chees. The dinner was awesome. After that dinner I went strait up to bed.",
+      "holistic_score": 8,
+      "trait_scores": {
+        "ideas": 3,
+        "organization": 2,
+        "style": 2,
+        "conventions": 1
+      }
+    },
+    {
+      "text": "Two summers ago, I helped out with kids camp at my church. I helped with the preschoolers for the week and that required a lot of patience. They were very exited and roudy. They were always running around and shouting. I had to keep a calm voice and be patient with the children or it would make the situation worse. Later on this week, I was put in carge of a young, special needs kid. He just couldn\u0092t sit still! I had to remind him over and over not to be so loud. He was very determined to get what he wanted. It was hard to stay calm. Dispite the hardship I managed to be patient and calm. The little boy decided I was all right and started to behave. Now, every time he sees me in the hallway he sais, \u0093hi!\u0094 very excitedly. Now am glad that I stayed patient.",
+      "holistic_score": 10,
+      "trait_scores": {
+        "ideas": 2,
+        "organization": 3,
+        "style": 2,
+        "conventions": 3
+      }
+    },
+    {
+      "text": "This is the story about the time I was patient. It was a warm day and I was sitting on the grass with the radio on. As my favorite song went off I reached to change the program. But when I heard the man say usher tickets on sell that and then I frozzes to listen, the tickets were going on sell down town. I told my mom and she rushed in the car and got dozen there so fast you wouldn\u0092t even see us leave. When I got to the line it was so long it seem like it go on forever. I waited and waited it felt like it only moved on an inch. Ti waited and still waited I beagin to get mad but I stood in line. Which my long wait was over I begain to jump for joy. As I walked to the concer she said \u0093sorry we are all sold out. I couldn\u0092t believe it I begain to scream my head out. I did all that waiting for nothing it was so unfair. And that\u0092s the time I was patient for noting.",
+      "holistic_score": 11,
+      "trait_scores": {
+        "ideas": 3,
+        "organization": 3,
+        "style": 3,
+        "conventions": 2
+      }
+    },
+    {
+      "text": "One of the greatest ways for a person to have patience is when you are being hunted down in a game of paintball. I have had experience once, and I hope it never happens again. I was playing paintball with a lot of my friends, and if I was not patient, I would have ended up getting shot in the head with paint. I was in a small forest, breathing hard after a close encounter, and I was behind a really thin tree. I had eliminated everyone except for one.I started breathing harder, because he was right by the tree I was leaning against. I decided I would come close to sacrificing myself if I just stood there, so I climbed up the tree.I was lucky I had a camoflage shirt on, because if I didn\u0092t blend in, I would get shot. I was deep in the tree, but it wouldn\u0092t have mattered, because I was too heavy for any of the branches. I fell out of the tree, but as I was falling, I shot the enemy in the leg. I had won! That is how patience rewards you.",
+      "holistic_score": 12,
+      "trait_scores": {
+        "ideas": 3,
+        "organization": 3,
+        "style": 3,
+        "conventions": 3
+      }
+    }
+  ],
+  "samples": [
+    {
+      "essay_id": "s7_17858",
+      "text": "A time that I was patient was last year at cheer competition. In the beginning of the day I was patient getting in line to get ready to perform. Once we were ready we were waiting to go to perform. After, we perfomed we went to watch the rest of the teams. The other teams were really good. Then are team went and had lunch while some of the teams were still performing. We had to wait til all the teams were done. Once the teams were done they called all the squads to the mat it was award time. All the teams sat down on the mat. My team members were waiting patiently to see if we worn in cheer or in dance. We waited and waited and waited till finally he called are name. The junior varsity cheer leader! We took first in dance and fourth in cheer. That day was a good day for me and I was very patient and being patient can turn out right or not the way you wanted it to be. You never now till it happens. That is a time when I was patient at cheer competition.",
+      "human_holistic": 12
+    },
+    {
+      "essay_id": "s7_17965",
+      "text": "In your own way about patience. How do you show patience you don\u0092t be rude and you just stand there and wait until your turn. To me patience means you stand or sit there quiet and with no rude comments. For example one time my mom friend was patience for her because she had to wait for her as my mom exchange my brother helment. When I was in the store my cousin was patience out an outfit and I was taking a long time. When my brother and I was in the shore he was buying a pair of shoes. I was patience. I didn\u0092t get mad or made rude comments. One time me and my nephew was in the store, and I was ordering some food and he made rude comments but he was impatience. Thy choice of patience is you have to be patience and wait your turn to go. The whole purpose of this writing is you have to be patience in life.",
+      "human_holistic": 6
+    },
+    {
+      "essay_id": "s7_17883",
+      "text": "I will be writing about patience in my own mix up way even thow you are adults. Once their was a littel silck warm getting ready to change in to a butter fly month. But this silck worm had a problem he was still to skiny to change he had to be nice & fat like a fat pratle stick cut in half. He crold going bush to bush eating any green leave he could find. But here\u0092s where a nether problem kicked in to please. It was becoming winter cut side, so every leave he found was brown & nasty. In the grass was changing to. But he wanted to change in to a moath so bad that he had chose but to eat the die leave & grass. In he was very patient about it to. But then he got trained at eating die leaves & grass so he grow more & more unpatient because he wanted to change so bad that he explaed . But he wack up in seen that he was in a white silck wrapping so he repped out of it. In seen he was a moath after all but then he remeinder he was eating nice green leave together. In wrapped his ??? up in want to sleep. And that\u0092s how he had that strange dream.",
+      "human_holistic": 8
+    },
+    {
+      "essay_id": "s7_17873",
+      "text": "A long time ago me and my family were going to a cottage we owned. It was about a four hour drive. It is the funniest place to go to. I was so happy I couldn\u0092t wait until we got there. I new I had to be patient. But I wanted to get there so bad. But if I would complain a lot I knew I would get in trouble. I know that because I had to learn the way. About a couple weeks before that we had to visit my grandma, she lived about two hours away. I kept complaining that it was taking to long. Then when we got home later on that hight I got my phone taken away for a week, so after that I knew not to complain ever again about something taking to long. So on our way to my grandma\u0092s cottage I didn\u0092t complain. Not complaining is smart to do. If you are unpatient don\u0092t go on long trips. Its good to be patient since I was patient the whole ride to my grandmas my mom was happy with me. If you are patient people will know that you are a very tolerant person.",
+      "human_holistic": 9
+    }
+  ]
+}

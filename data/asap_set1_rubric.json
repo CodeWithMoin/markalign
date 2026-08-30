@@ -1,0 +1,26 @@
+{
+  "set_id": "asap-set-1",
+  "prompt": "Write a letter to your local newspaper stating your opinion on the effects computers have on people.",
+  "traits": [
+    {
+      "name": "content",
+      "description": "Relevance, depth and quality of ideas and evidence",
+      "min_score": 1,
+      "max_score": 6
+    },
+    {
+      "name": "organization",
+      "description": "Structure, sequencing and coherence",
+      "min_score": 1,
+      "max_score": 6
+    },
+    {
+      "name": "conventions",
+      "description": "Grammar, spelling and mechanics",
+      "min_score": 1,
+      "max_score": 6
+    }
+  ],
+  "holistic_min": 1,
+  "holistic_max": 6
+}

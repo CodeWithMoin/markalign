@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: edexia-alignment
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn backend.app:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: EDEXIA_MOCK
+        value: "1"          # flip to "0" and add ANTHROPIC_API_KEY for real grading
+      - key: ANTHROPIC_API_KEY
+        sync: false

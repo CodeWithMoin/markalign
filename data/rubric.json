@@ -1,0 +1,26 @@
+{
+  "set_id": "sample-english-persuasive",
+  "prompt": "Write a persuasive essay arguing whether students should be allowed to use AI tools for homework.",
+  "traits": [
+    {
+      "name": "content",
+      "description": "Relevance, depth and quality of ideas and evidence",
+      "min_score": 1,
+      "max_score": 6
+    },
+    {
+      "name": "organization",
+      "description": "Structure, sequencing and coherence of the argument",
+      "min_score": 1,
+      "max_score": 6
+    },
+    {
+      "name": "conventions",
+      "description": "Grammar, spelling and mechanics",
+      "min_score": 1,
+      "max_score": 6
+    }
+  ],
+  "holistic_min": 2,
+  "holistic_max": 12
+}

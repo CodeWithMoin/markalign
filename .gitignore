@@ -1,0 +1,19 @@
+__pycache__/
+*.pyc
+.env
+eval_report.json
+.venv/
+
+# Kaggle-gated raw dataset + full essay conversions (Kaggle terms). The small
+# data/asap_set7_sample.json + its rubric ARE committed so the pipeline is
+# provably real offline.
+data/training_set_rel3.tsv
+data/asap_set*_essays.json
+
+.DS_Store
+.playwright-mcp/
+*.png
+# the root calibration output is a run artifact; results/calibration_real.json is the committed copy
+calibration_result.json
+.impeccable/hook.cache.json
+.omc/

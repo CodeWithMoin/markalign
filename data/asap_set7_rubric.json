@@ -1,0 +1,33 @@
+{
+  "set_id": "asap-set-7",
+  "prompt": "Write a story about a time when you were patient, or a time when someone you know was patient.",
+  "traits": [
+    {
+      "name": "ideas",
+      "description": "Development, focus and detail of the story",
+      "min_score": 0,
+      "max_score": 3
+    },
+    {
+      "name": "organization",
+      "description": "Structure, sequencing and coherence",
+      "min_score": 0,
+      "max_score": 3
+    },
+    {
+      "name": "style",
+      "description": "Word choice, sentence fluency and voice",
+      "min_score": 0,
+      "max_score": 3
+    },
+    {
+      "name": "conventions",
+      "description": "Grammar, usage, spelling and mechanics",
+      "min_score": 0,
+      "max_score": 3
+    }
+  ],
+  "holistic_min": 0,
+  "holistic_max": 12,
+  "holistic_from_traits": true
+}

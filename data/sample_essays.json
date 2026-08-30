@@ -1,0 +1,386 @@
+[
+  {
+    "essay_id": "e000",
+    "text": "AI is everywhere now. Moreover, the workforce these students will enter already runs on these tools, so banning them in school only widens the gap between education and reality. Firstly, AI tutors can explain a concept in as many ways as a student needs, which a single teacher with thirty students simply cannot do. This means struggling students get help exactly when they are stuck, rather than falling further behind. AI does homework fast. In conclusion, AI should be allowed but with clear guardrails, so that it amplifies effort rather than replacing it.",
+    "rater1_holistic": 7,
+    "rater2_holistic": 7,
+    "rater1_traits": {
+      "content": 4,
+      "organization": 3,
+      "conventions": 5
+    },
+    "rater2_traits": {
+      "content": 4,
+      "organization": 3,
+      "conventions": 5
+    }
+  },
+  {
+    "essay_id": "e001",
+    "text": "In today's rapidly changing world, the question of whether students should use AI tools has become urgent. Moreover, the workforce these students will enter already runs on these tools, so banning them in school only widens the gap between education and reality. That is why I believe it should be allowed.",
+    "rater1_holistic": 5,
+    "rater2_holistic": 5,
+    "rater1_traits": {
+      "content": 3,
+      "organization": 2,
+      "conventions": 4
+    },
+    "rater2_traits": {
+      "content": 3,
+      "organization": 2,
+      "conventions": 4
+    }
+  },
+  {
+    "essay_id": "e002",
+    "text": "I think AI is good. Firstly, AI tutors can explain a concept in as many ways as a student needs, which a single teacher with thirty students simply cannot do. This means struggling students get help exactly when they are stuck, rather than falling further behind. So AI is good and should be allowed.",
+    "rater1_holistic": 6,
+    "rater2_holistic": 7,
+    "rater1_traits": {
+      "content": 3,
+      "organization": 3,
+      "conventions": 2
+    },
+    "rater2_traits": {
+      "content": 4,
+      "organization": 3,
+      "conventions": 2
+    }
+  },
+  {
+    "essay_id": "e003",
+    "text": "Homework has always been a battleground between students and teachers. Firstly, AI tutors can explain a concept in as many ways as a student needs, which a single teacher with thirty students simply cannot do. This means struggling students get help exactly when they are stuck, rather than falling further behind. It helps. However, the counterargument deserves a fair hearing: over-reliance can hollow out the very skills school exists to build, and weaker students may be tempted to outsource the thinking entirely. Critics argue that students will stop thinking for themselves, and there is real force to this concern. If a student copies an answer without understanding it, no learning has occurred at all. So AI is good and should be allowed.",
+    "rater1_holistic": 9,
+    "rater2_holistic": 9,
+    "rater1_traits": {
+      "content": 5,
+      "organization": 4,
+      "conventions": 6
+    },
+    "rater2_traits": {
+      "content": 5,
+      "organization": 4,
+      "conventions": 6
+    }
+  },
+  {
+    "essay_id": "e004",
+    "text": "Some people believe that using AI for homework is cheating, but I strongly disagree with this view. AI does homework fast. It helps. Firstly, AI tutors can explain a concept in as many ways as a student needs, which a single teacher with thirty students simply cannot do. This means struggling students get help exactly when they are stuck, rather than falling further behind. Critics argue that students will stop thinking for themselves, and there is real force to this concern. If a student copies an answer without understanding it, no learning has occurred at all. So AI is good and should be allowed.",
+    "rater1_holistic": 8,
+    "rater2_holistic": 8,
+    "rater1_traits": {
+      "content": 4,
+      "organization": 4,
+      "conventions": 5
+    },
+    "rater2_traits": {
+      "content": 4,
+      "organization": 4,
+      "conventions": 5
+    }
+  },
+  {
+    "essay_id": "e005",
+    "text": "In today's rapidly changing world, the question of whether students should use AI tools has become urgent. AI does homework fast. It helps. Moreover, the workforce these students will enter already runs on these tools, so banning them in school only widens the gap between education and reality. Critics argue that students will stop thinking for themselves, and there is real force to this concern. If a student copies an answer without understanding it, no learning has occurred at all. That is why I believe it should be allowed.",
+    "rater1_holistic": 8,
+    "rater2_holistic": 8,
+    "rater1_traits": {
+      "content": 4,
+      "organization": 4,
+      "conventions": 5
+    },
+    "rater2_traits": {
+      "content": 4,
+      "organization": 4,
+      "conventions": 5
+    }
+  },
+  {
+    "essay_id": "e006",
+    "text": "Some people believe that using AI for homework is cheating, but I strongly disagree with this view. It helps. However, the counterargument deserves a fair hearing: over-reliance can hollow out the very skills school exists to build, and weaker students may be tempted to outsource the thinking entirely. AI does homework fast. In conclusion, AI should be allowed but with clear guardrails, so that it amplifies effort rather than replacing it.",
+    "rater1_holistic": 8,
+    "rater2_holistic": 8,
+    "rater1_traits": {
+      "content": 4,
+      "organization": 4,
+      "conventions": 4
+    },
+    "rater2_traits": {
+      "content": 4,
+      "organization": 4,
+      "conventions": 4
+    }
+  },
+  {
+    "essay_id": "e007",
+    "text": "Some people believe that using AI for homework is cheating, but I strongly disagree with this view. AI does homework fast. Firstly, AI tutors can explain a concept in as many ways as a student needs, which a single teacher with thirty students simply cannot do. This means struggling students get help exactly when they are stuck, rather than falling further behind. However, the counterargument deserves a fair hearing: over-reliance can hollow out the very skills school exists to build, and weaker students may be tempted to outsource the thinking entirely. That is why I believe it should be allowed.",
+    "rater1_holistic": 8,
+    "rater2_holistic": 8,
+    "rater1_traits": {
+      "content": 4,
+      "organization": 4,
+      "conventions": 3
+    },
+    "rater2_traits": {
+      "content": 4,
+      "organization": 4,
+      "conventions": 3
+    }
+  },
+  {
+    "essay_id": "e008",
+    "text": "In today's rapidly changing world, the question of whether students should use AI tools has become urgent. However, the counterargument deserves a fair hearing: over-reliance can hollow out the very skills school exists to build, and weaker students may be tempted to outsource the thinking entirely. Firstly, AI tutors can explain a concept in as many ways as a student needs, which a single teacher with thirty students simply cannot do. This means struggling students get help exactly when they are stuck, rather than falling further behind. Critics argue that students will stop thinking for themselves, and there is real force to this concern. If a student copies an answer without understanding it, no learning has occurred at all. Ultimately, the tool is neither saviour nor threat; what matters is whether we teach students to use it to think harder, not less.",
+    "rater1_holistic": 12,
+    "rater2_holistic": 12,
+    "rater1_traits": {
+      "content": 6,
+      "organization": 6,
+      "conventions": 6
+    },
+    "rater2_traits": {
+      "content": 6,
+      "organization": 6,
+      "conventions": 6
+    }
+  },
+  {
+    "essay_id": "e009",
+    "text": "In today's rapidly changing world, the question of whether students should use AI tools has become urgent. Firstly, AI tutors can explain a concept in as many ways as a student needs, which a single teacher with thirty students simply cannot do. This means struggling students get help exactly when they are stuck, rather than falling further behind. Critics argue that students will stop thinking for themselves, and there is real force to this concern. If a student copies an answer without understanding it, no learning has occurred at all. Moreover, the workforce these students will enter already runs on these tools, so banning them in school only widens the gap between education and reality. In conclusion, AI should be allowed but with clear guardrails, so that it amplifies effort rather than replacing it.",
+    "rater1_holistic": 10,
+    "rater2_holistic": 11,
+    "rater1_traits": {
+      "content": 5,
+      "organization": 5,
+      "conventions": 5
+    },
+    "rater2_traits": {
+      "content": 6,
+      "organization": 5,
+      "conventions": 5
+    }
+  },
+  {
+    "essay_id": "e010",
+    "text": "The debate over artificial intelligence in classrooms cuts to the heart of what learning is for. Moreover, the workforce these students will enter already runs on these tools, so banning them in school only widens the gap between education and reality. Critics argue that students will stop thinking for themselves, and there is real force to this concern. If a student copies an answer without understanding it, no learning has occurred at all. However, the counterargument deserves a fair hearing: over-reliance can hollow out the very skills school exists to build, and weaker students may be tempted to outsource the thinking entirely. AI does homework fast. Ultimately, the tool is neither saviour nor threat; what matters is whether we teach students to use it to think harder, not less.",
+    "rater1_holistic": 10,
+    "rater2_holistic": 10,
+    "rater1_traits": {
+      "content": 5,
+      "organization": 5,
+      "conventions": 5
+    },
+    "rater2_traits": {
+      "content": 5,
+      "organization": 5,
+      "conventions": 5
+    }
+  },
+  {
+    "essay_id": "e011",
+    "text": "In today's rapidly changing world, the question of whether students should use AI tools has become urgent. Moreover, the workforce these students will enter already runs on these tools, so banning them in school only widens the gap between education and reality. Firstly, AI tutors can explain a concept in as many ways as a student needs, which a single teacher with thirty students simply cannot do. This means struggling students get help exactly when they are stuck, rather than falling further behind. It helps. However, the counterargument deserves a fair hearing: over-reliance can hollow out the very skills school exists to build, and weaker students may be tempted to outsource the thinking entirely. So AI is good and should be allowed.",
+    "rater1_holistic": 10,
+    "rater2_holistic": 10,
+    "rater1_traits": {
+      "content": 5,
+      "organization": 5,
+      "conventions": 5
+    },
+    "rater2_traits": {
+      "content": 5,
+      "organization": 5,
+      "conventions": 5
+    }
+  },
+  {
+    "essay_id": "e012",
+    "text": "AI is everywhere now. Moreover, the workforce these students will enter already runs on these tools, so banning them in school only widens the gap between education and reality. That is why I believe it should be allowed.",
+    "rater1_holistic": 5,
+    "rater2_holistic": 6,
+    "rater1_traits": {
+      "content": 3,
+      "organization": 2,
+      "conventions": 3
+    },
+    "rater2_traits": {
+      "content": 4,
+      "organization": 2,
+      "conventions": 3
+    }
+  },
+  {
+    "essay_id": "e013",
+    "text": "The debate over artificial intelligence in classrooms cuts to the heart of what learning is for. Moreover, the workforce these students will enter already runs on these tools, so banning them in school only widens the gap between education and reality. Critics argue that students will stop thinking for themselves, and there is real force to this concern. If a student copies an answer without understanding it, no learning has occurred at all. However, the counterargument deserves a fair hearing: over-reliance can hollow out the very skills school exists to build, and weaker students may be tempted to outsource the thinking entirely. So AI is good and should be allowed.",
+    "rater1_holistic": 7,
+    "rater2_holistic": 7,
+    "rater1_traits": {
+      "content": 4,
+      "organization": 3,
+      "conventions": 3
+    },
+    "rater2_traits": {
+      "content": 4,
+      "organization": 3,
+      "conventions": 3
+    }
+  },
+  {
+    "essay_id": "e014",
+    "text": "In today's rapidly changing world, the question of whether students should use AI tools has become urgent. Moreover, the workforce these students will enter already runs on these tools, so banning them in school only widens the gap between education and reality. AI does homework fast. So AI is good and should be allowed.",
+    "rater1_holistic": 5,
+    "rater2_holistic": 5,
+    "rater1_traits": {
+      "content": 3,
+      "organization": 2,
+      "conventions": 2
+    },
+    "rater2_traits": {
+      "content": 3,
+      "organization": 2,
+      "conventions": 2
+    }
+  },
+  {
+    "essay_id": "e015",
+    "text": "Some people believe that using AI for homework is cheating, but I strongly disagree with this view. AI does homework fast. However, the counterargument deserves a fair hearing: over-reliance can hollow out the very skills school exists to build, and weaker students may be tempted to outsource the thinking entirely. Critics argue that students will stop thinking for themselves, and there is real force to this concern. If a student copies an answer without understanding it, no learning has occurred at all. Firstly, AI tutors can explain a concept in as many ways as a student needs, which a single teacher with thirty students simply cannot do. This means struggling students get help exactly when they are stuck, rather than falling further behind. In conclusion, AI should be allowed but with clear guardrails, so that it amplifies effort rather than replacing it.",
+    "rater1_holistic": 10,
+    "rater2_holistic": 10,
+    "rater1_traits": {
+      "content": 5,
+      "organization": 5,
+      "conventions": 6
+    },
+    "rater2_traits": {
+      "content": 5,
+      "organization": 5,
+      "conventions": 6
+    }
+  },
+  {
+    "essay_id": "e016",
+    "text": "Homework has always been a battleground between students and teachers. Moreover, the workforce these students will enter already runs on these tools, so banning them in school only widens the gap between education and reality. Firstly, AI tutors can explain a concept in as many ways as a student needs, which a single teacher with thirty students simply cannot do. This means struggling students get help exactly when they are stuck, rather than falling further behind. However, the counterargument deserves a fair hearing: over-reliance can hollow out the very skills school exists to build, and weaker students may be tempted to outsource the thinking entirely. That is why I believe it should be allowed.",
+    "rater1_holistic": 7,
+    "rater2_holistic": 7,
+    "rater1_traits": {
+      "content": 4,
+      "organization": 3,
+      "conventions": 3
+    },
+    "rater2_traits": {
+      "content": 4,
+      "organization": 3,
+      "conventions": 3
+    }
+  },
+  {
+    "essay_id": "e017",
+    "text": "In today's rapidly changing world, the question of whether students should use AI tools has become urgent. Critics argue that students will stop thinking for themselves, and there is real force to this concern. If a student copies an answer without understanding it, no learning has occurred at all. AI does homework fast. In conclusion, AI should be allowed but with clear guardrails, so that it amplifies effort rather than replacing it.",
+    "rater1_holistic": 6,
+    "rater2_holistic": 7,
+    "rater1_traits": {
+      "content": 3,
+      "organization": 3,
+      "conventions": 2
+    },
+    "rater2_traits": {
+      "content": 4,
+      "organization": 3,
+      "conventions": 2
+    }
+  },
+  {
+    "essay_id": "e018",
+    "text": "Some people believe that using AI for homework is cheating, but I strongly disagree with this view. AI does homework fast. In conclusion, AI should be allowed but with clear guardrails, so that it amplifies effort rather than replacing it.",
+    "rater1_holistic": 3,
+    "rater2_holistic": 3,
+    "rater1_traits": {
+      "content": 2,
+      "organization": 1,
+      "conventions": 3
+    },
+    "rater2_traits": {
+      "content": 2,
+      "organization": 1,
+      "conventions": 3
+    }
+  },
+  {
+    "essay_id": "e019",
+    "text": "The debate over artificial intelligence in classrooms cuts to the heart of what learning is for. Critics argue that students will stop thinking for themselves, and there is real force to this concern. If a student copies an answer without understanding it, no learning has occurred at all. However, the counterargument deserves a fair hearing: over-reliance can hollow out the very skills school exists to build, and weaker students may be tempted to outsource the thinking entirely. Ultimately, the tool is neither saviour nor threat; what matters is whether we teach students to use it to think harder, not less.",
+    "rater1_holistic": 7,
+    "rater2_holistic": 7,
+    "rater1_traits": {
+      "content": 4,
+      "organization": 3,
+      "conventions": 4
+    },
+    "rater2_traits": {
+      "content": 4,
+      "organization": 3,
+      "conventions": 4
+    }
+  },
+  {
+    "essay_id": "e020",
+    "text": "Homework has always been a battleground between students and teachers. Critics argue that students will stop thinking for themselves, and there is real force to this concern. If a student copies an answer without understanding it, no learning has occurred at all. Firstly, AI tutors can explain a concept in as many ways as a student needs, which a single teacher with thirty students simply cannot do. This means struggling students get help exactly when they are stuck, rather than falling further behind. It helps. In conclusion, AI should be allowed but with clear guardrails, so that it amplifies effort rather than replacing it.",
+    "rater1_holistic": 10,
+    "rater2_holistic": 10,
+    "rater1_traits": {
+      "content": 5,
+      "organization": 5,
+      "conventions": 5
+    },
+    "rater2_traits": {
+      "content": 5,
+      "organization": 5,
+      "conventions": 5
+    }
+  },
+  {
+    "essay_id": "e021",
+    "text": "I think AI is good. Firstly, AI tutors can explain a concept in as many ways as a student needs, which a single teacher with thirty students simply cannot do. This means struggling students get help exactly when they are stuck, rather than falling further behind. It helps. Ultimately, the tool is neither saviour nor threat; what matters is whether we teach students to use it to think harder, not less.",
+    "rater1_holistic": 6,
+    "rater2_holistic": 7,
+    "rater1_traits": {
+      "content": 3,
+      "organization": 3,
+      "conventions": 2
+    },
+    "rater2_traits": {
+      "content": 4,
+      "organization": 3,
+      "conventions": 2
+    }
+  },
+  {
+    "essay_id": "e022",
+    "text": "The debate over artificial intelligence in classrooms cuts to the heart of what learning is for. Firstly, AI tutors can explain a concept in as many ways as a student needs, which a single teacher with thirty students simply cannot do. This means struggling students get help exactly when they are stuck, rather than falling further behind. Critics argue that students will stop thinking for themselves, and there is real force to this concern. If a student copies an answer without understanding it, no learning has occurred at all. AI does homework fast. So AI is good and should be allowed.",
+    "rater1_holistic": 7,
+    "rater2_holistic": 8,
+    "rater1_traits": {
+      "content": 4,
+      "organization": 3,
+      "conventions": 5
+    },
+    "rater2_traits": {
+      "content": 5,
+      "organization": 3,
+      "conventions": 5
+    }
+  },
+  {
+    "essay_id": "e023",
+    "text": "Some people believe that using AI for homework is cheating, but I strongly disagree with this view. However, the counterargument deserves a fair hearing: over-reliance can hollow out the very skills school exists to build, and weaker students may be tempted to outsource the thinking entirely. It helps. AI does homework fast. Firstly, AI tutors can explain a concept in as many ways as a student needs, which a single teacher with thirty students simply cannot do. This means struggling students get help exactly when they are stuck, rather than falling further behind. That is why I believe it should be allowed.",
+    "rater1_holistic": 9,
+    "rater2_holistic": 10,
+    "rater1_traits": {
+      "content": 5,
+      "organization": 4,
+      "conventions": 4
+    },
+    "rater2_traits": {
+      "content": 6,
+      "organization": 4,
+      "conventions": 4
+    }
+  }
+]
