@@ -240,4 +240,6 @@ def eval_summary():
 
 @app.get("/", response_class=HTMLResponse)
 def index():
-    return (ROOT / "frontend" / "index.html").read_text()
+    # stamp the task into the HTML so the banner renders in the first paint
+    # instead of popping in after the /demo fetch
+    return (ROOT / "frontend" / "index.html").read_text().replace("{{TASK}}", DEMO_RUBRIC.prompt)
