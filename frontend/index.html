@@ -137,7 +137,8 @@
     animation-delay:var(--d,0ms);transition:background-color .18s var(--ease);
     -webkit-box-decoration-break:clone;box-decoration-break:clone}
   @keyframes draw{to{background-size:100% 100%}}
-  mark.hot{background-color:var(--ground-soft);background-size:100% 100%}
+  mark.hot{background-image:linear-gradient(var(--ground-soft), var(--ground-soft));
+    background-size:100% 100%}
   .num{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;
     font-size:9.5px;font-weight:700;color:#fff;background:var(--ground);border-radius:999px;
     padding:0 3px;vertical-align:super;margin-left:3px;font-family:var(--sans);line-height:1}
