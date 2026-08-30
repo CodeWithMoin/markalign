@@ -260,7 +260,7 @@
   <div class="taskbar" id="taskbar" hidden><span class="tk">The task being graded against</span><span id="taskText"></span></div>
 
   <div class="composer">
-    <textarea id="essay" oninput="autogrow(this)" placeholder="Paste a student essay, or load a real sample below…"></textarea>
+    <textarea id="essay" oninput="autogrow(this)" placeholder="Paste a student essay…"></textarea>
     <div class="composer-bar">
       <span class="cmeta"><span class="dot"></span><span id="mode">loading…</span></span>
       <div class="cbtns">
@@ -338,6 +338,25 @@
 let samples=[], cur=0, holisticMax=6, traitMax=6, PROFILE=null;
 
 function autogrow(el){ el.style.height='auto'; el.style.height=el.scrollHeight+'px'; }
+
+// ---- typing placeholder: the empty box quietly types what you can do with it ----
+const HINTS=[
+  "Paste a student essay to grade it live…",
+  "Try a real essay this teacher marked — hit “Use a sample essay”…",
+  "Write a story about a time when you were patient…"];
+(function typeHint(){
+  const el=document.getElementById('essay');
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;   // keep it static
+  let h=0,i=0,del=false;
+  (function tick(){
+    if(document.activeElement===el||el.value){ setTimeout(tick,900); return; }  // pause while in use
+    const s=HINTS[h];
+    el.placeholder=s.slice(0,i);
+    if(!del){ i++; if(i>s.length){ del=true; setTimeout(tick,1800); return; } }
+    else { i--; if(i===0){ del=false; h=(h+1)%HINTS.length; } }
+    setTimeout(tick, del?14:38);
+  })();
+})();
 function fillSample(i){
   if(!samples.length) return;
   cur=(i+samples.length)%samples.length;
@@ -361,8 +380,7 @@ fetch('/demo').then(r=>r.json()).then(d=>{
   // deep link: /#<essay_id> re-grades that sample on reload instead of dropping to home
   const want=decodeURIComponent(location.hash.slice(1));
   const i=samples.findIndex(s=>s.essay_id===want);
-  if(i>=0){ fillSample(i); run(); }
-  else if(samples.length) fillSample(0);     // pre-fill the box; grading happens on click
+  if(i>=0){ fillSample(i); run(); }          // deep link only — landing starts empty
 }).catch(()=>{ document.getElementById('err').textContent='Backend unreachable — start the server.'; });
 
 fetch('/health').then(r=>r.json()).then(h=>{
