@@ -199,6 +199,94 @@ def _demo_profile():
     return _demo_cache["profile"]
 
 
+# ---- Bring your own teacher: a signed-in user pastes essays they marked, we
+#      learn THEIR standard. The server stays stateless — the browser owns the
+#      Supabase row (RLS-enforced); these endpoints only run the model. ----
+
+class UserExample(BaseModel):
+    text: str
+    score: int
+
+
+class BuildGrader(BaseModel):
+    name: str
+    task: str
+    max_score: int = 10
+    examples: list[UserExample]
+
+
+@app.post("/build_profile")
+def build_profile_endpoint(req: BuildGrader, request: Request):
+    """Learn a grader's standard from their own marked essays. One model call.
+    Users mark holistically, so the rubric is a single 'overall' ladder on their
+    scale — the same checklist + score-distribution machinery as the demo teacher."""
+    user = _verify_user(request)
+    if not 2 <= req.max_score <= 20:
+        raise HTTPException(400, "max score must be between 2 and 20 (for /100 marking, use /10)")
+    if not 6 <= len(req.examples) <= 25:
+        raise HTTPException(400, "need 6 to 25 marked essays to learn a standard")
+    for i, ex in enumerate(req.examples):
+        if not 20 <= len(ex.text) <= MAX_ESSAY_CHARS:
+            raise HTTPException(400, f"essay {i + 1} must be 20 to {MAX_ESSAY_CHARS} characters")
+        if not 0 <= ex.score <= req.max_score:
+            raise HTTPException(400, f"essay {i + 1}: score {ex.score} is outside 0-{req.max_score}")
+    if len({ex.score for ex in req.examples}) < 2:
+        raise HTTPException(400, "examples all carry the same mark — include a range so the standard is learnable")
+    _guard_live_grade(request, req.task, key=user)
+    rubric = Rubric(set_id="custom", prompt=req.task.strip(),
+                    traits=[Trait(name="overall",
+                                  description="overall quality, judged the way this grader judges it",
+                                  min_score=0, max_score=req.max_score)],
+                    holistic_min=0, holistic_max=req.max_score, holistic_from_traits=True)
+    examples = [GradedExample(essay_id=f"u{i}", text=ex.text,
+                              trait_scores={"overall": ex.score}, holistic_score=ex.score)
+                for i, ex in enumerate(req.examples)]
+    try:
+        prof = build_profile(req.name.strip()[:60] or "my-grader", rubric, examples,
+                             mock=MOCK, checklist=True)
+    except HTTPException:
+        raise
+    except Exception as ex:
+        raise HTTPException(502, f"couldn't learn the standard right now ({type(ex).__name__}) — try again")
+    return {"rubric": rubric.model_dump(), "profile": prof.model_dump()}
+
+
+class GradeWith(BaseModel):
+    rubric: dict
+    profile: dict
+    examples: list[UserExample] = []
+    essay_text: str
+    threshold: float = 0.6
+
+
+@app.post("/grade_with")
+def grade_with(req: GradeWith, request: Request):
+    """Grade an essay against a previously learned user grader (rubric + profile
+    come back from the browser's own Supabase row). One model call."""
+    from .schemas import TeacherProfile
+    user = _verify_user(request)
+    _guard_live_grade(request, req.essay_text, key=user)
+    try:
+        rubric = Rubric(**req.rubric)
+        profile = TeacherProfile(**req.profile)
+    except Exception:
+        raise HTTPException(400, "that grader looks malformed — rebuild it")
+    anchors = None
+    if req.examples:
+        ordered = sorted((GradedExample(essay_id=f"a{i}", text=e.text,
+                                        trait_scores={"overall": e.score}, holistic_score=e.score)
+                          for i, e in enumerate(req.examples)), key=lambda x: x.holistic_score)
+        anchors = [ordered[0], ordered[len(ordered) // 2], ordered[-1]]
+    essay = Essay(essay_id="live", set_id=rubric.set_id, text=req.essay_text)
+    try:
+        result = apply_gate(grade(essay, rubric, profile, anchors=anchors, mock=MOCK), req.threshold)
+    except HTTPException:
+        raise
+    except Exception as ex:
+        raise HTTPException(502, f"live grading is unavailable right now ({type(ex).__name__}) — try again")
+    return {"result": result.model_dump()}
+
+
 class OwnGrade(BaseModel):
     essay_text: str
     essay_id: str | None = None

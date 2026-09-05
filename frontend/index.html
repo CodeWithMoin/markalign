@@ -56,6 +56,19 @@
   .taskbar .tk{font-weight:700;color:var(--ground);text-transform:uppercase;font-size:10px;
     letter-spacing:.07em;margin-right:9px;white-space:nowrap}
 
+  /* ---- your-grader bar + builder ---- */
+  .graderbar{max-width:900px;margin:0 auto 10px;display:flex;align-items:center;gap:10px;
+    font-size:13px;color:var(--ink-soft)}
+  .graderbar .glbl{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+    color:var(--ground)}
+  .graderbar select{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--ink);
+    background:var(--white);border:1px solid var(--line);border-radius:999px;padding:7px 12px}
+  .builder{max-width:900px;margin:0 auto 18px;background:var(--white);border:1px solid var(--line);
+    border-radius:20px;padding:22px 24px;box-shadow:0 12px 34px rgba(0,0,0,.07)}
+  .builder .brow{display:flex;gap:12px;flex-wrap:wrap}
+  .bex{display:grid;grid-template-columns:1fr 92px;gap:10px;align-items:start;margin-bottom:10px}
+  .bex textarea{min-height:76px;font-size:14px;line-height:1.5}
+
   /* ---- the composer: Edexia-style paste card ---- */
   .composer{background:var(--white);border:1px solid var(--line);border-radius:20px;
     box-shadow:0 12px 34px rgba(0,0,0,.07);padding:6px;max-width:900px;margin:8px auto 0}
@@ -270,6 +283,36 @@
   <!-- task text is stamped server-side so the banner is in the first paint — no layout jump -->
   <div class="taskbar" id="taskbar"><span class="tk">The task being graded against</span><span id="taskText">{{TASK}}</span></div>
 
+  <!-- signed-in users can grade as themselves: learned from essays THEY marked -->
+  <div class="graderbar" id="graderbar" hidden>
+    <span class="glbl">grading as</span>
+    <select id="graderSel"></select>
+    <button class="ghost" id="newGraderBtn">+ New grader</button>
+  </div>
+
+  <div class="builder" id="builder" hidden>
+    <h2 style="margin-bottom:4px">Teach it your standard</h2>
+    <p class="hint">Paste 6–25 essays you've already marked, with the mark you gave each.
+      It learns what moves <em>your</em> marks — then grades new essays the same way.</p>
+    <div class="brow">
+      <div style="flex:2;min-width:220px"><label>grader name</label>
+        <input id="bName" placeholder="e.g. My Year 9 narrative marking"></div>
+      <div style="flex:3;min-width:260px"><label>the assignment task</label>
+        <input id="bTask" placeholder="What were the students asked to write?"></div>
+      <div style="width:110px"><label>marked out of</label>
+        <input id="bMax" type="number" min="2" max="20" value="10"></div>
+    </div>
+    <label style="margin-top:14px">marked essays</label>
+    <div id="bExamples"></div>
+    <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+      <button class="ghost" id="bAdd">+ Add another essay</button>
+      <span style="flex:1"></span>
+      <button class="ghost" id="bCancel">Cancel</button>
+      <button id="bLearn">Learn my standard</button>
+    </div>
+    <div class="err" id="bErr"></div>
+  </div>
+
   <div class="composer">
     <textarea id="essay" oninput="autogrow(this)" placeholder="Paste a student essay…"></textarea>
     <div class="composer-bar">
@@ -406,6 +449,7 @@ function showCompose(){ document.getElementById('resultView').hidden=true;
 
 fetch('/demo').then(r=>r.json()).then(d=>{
   samples=d.samples||[]; PROFILE=d.profile; holisticMax=d.holistic_max||6; traitMax=d.trait_max||6;
+  DEMO_META={profile:d.profile, hmax:holisticMax, tmax:traitMax, task:d.prompt||''};
   // task banner is server-stamped; JS only fills it if the stamp didn't happen (e.g. static hosting)
   const tt=document.getElementById('taskText');
   if(d.prompt && tt.textContent.includes('{{')) tt.textContent=d.prompt;
@@ -447,7 +491,7 @@ if(sb){
         run(); }   // they were mid-grade when we sent them to Google — finish the job
     }catch(_){}
   });
-  sb.auth.onAuthStateChange((_e,s)=>{ SESSION=s; renderAuth(); });
+  sb.auth.onAuthStateChange((_e,s)=>{ SESSION=s; renderAuth(); loadGraders(); });
 }
 
 async function ensureSignedIn(text){
@@ -460,6 +504,90 @@ async function ensureSignedIn(text){
     options:{redirectTo:location.origin+location.pathname}});
   return false;
 }
+
+// ---- bring your own teacher: graders live in the user's own Supabase rows ----
+let GRADERS=[], ACTIVE=null, DEMO_META=null;   // ACTIVE=null → the demo teacher
+
+function setActive(g){
+  ACTIVE=g;
+  const demo=!g;
+  PROFILE     = demo ? (DEMO_META&&DEMO_META.profile) : g.profile;
+  holisticMax = demo ? (DEMO_META&&DEMO_META.hmax)||12 : g.rubric.holistic_max;
+  traitMax    = demo ? (DEMO_META&&DEMO_META.tmax)||3  : g.rubric.traits[0].max_score;
+  document.getElementById('taskText').textContent = demo ? (DEMO_META&&DEMO_META.task)||'' : g.task;
+  document.getElementById('sampleBtn').hidden = !demo;   // samples belong to the demo teacher
+  document.getElementById('graderSel').value = demo ? '' : g.id;
+}
+
+function renderGraderBar(){
+  const bar=document.getElementById('graderbar'), sel=document.getElementById('graderSel');
+  if(!sb||!SESSION){ bar.hidden=true; if(ACTIVE) setActive(null); return; }
+  bar.hidden=false;
+  sel.innerHTML='<option value="">Demo teacher (ASAP set 7)</option>'
+    +GRADERS.map(g=>`<option value="${g.id}">${g.name.replace(/</g,'&lt;')}</option>`).join('');
+  sel.value=ACTIVE?ACTIVE.id:'';
+}
+
+async function loadGraders(){
+  if(!sb||!SESSION) return renderGraderBar();
+  const {data,error}=await sb.from('graders')
+    .select('id,name,task,rubric,examples,profile').order('created_at');
+  if(!error) GRADERS=data||[];
+  renderGraderBar();
+}
+
+document.getElementById('graderSel').onchange=e=>{
+  setActive(GRADERS.find(g=>g.id===e.target.value)||null);
+};
+
+// --- builder panel ---
+function exRow(){
+  const d=document.createElement('div'); d.className='bex';
+  d.innerHTML=`<textarea placeholder="Paste one essay you've marked…"></textarea>
+    <div><label>mark</label><input type="number" min="0" placeholder="0"></div>`;
+  return d;
+}
+document.getElementById('newGraderBtn').onclick=()=>{
+  const b=document.getElementById('builder'); b.hidden=false;
+  const ex=document.getElementById('bExamples');
+  if(!ex.children.length) for(let i=0;i<6;i++) ex.appendChild(exRow());
+  b.scrollIntoView({behavior:'smooth',block:'start'});
+};
+document.getElementById('bAdd').onclick=()=>document.getElementById('bExamples').appendChild(exRow());
+document.getElementById('bCancel').onclick=()=>{ document.getElementById('builder').hidden=true;
+  document.getElementById('bErr').textContent=''; };
+
+document.getElementById('bLearn').onclick=async()=>{
+  const err=document.getElementById('bErr'), btn=document.getElementById('bLearn');
+  err.textContent='';
+  const name=document.getElementById('bName').value.trim();
+  const task=document.getElementById('bTask').value.trim();
+  const max=parseInt(document.getElementById('bMax').value,10);
+  const examples=[...document.querySelectorAll('#bExamples .bex')].map(r=>({
+    text:r.querySelector('textarea').value.trim(),
+    score:parseInt(r.querySelector('input').value,10)
+  })).filter(e=>e.text);
+  if(!name||!task){ err.textContent='Give the grader a name and the assignment task.'; return; }
+  if(examples.some(e=>isNaN(e.score))){ err.textContent='Every pasted essay needs its mark.'; return; }
+  if(examples.length<6){ err.textContent='Paste at least 6 marked essays (up to 25).'; return; }
+  if(!(await ensureSignedIn(''))) return;
+  btn.disabled=true; btn.textContent='learning your standard…';
+  try{
+    const res=await fetch('/build_profile',{method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+SESSION.access_token},
+      body:JSON.stringify({name,task,max_score:max,examples})});
+    if(!res.ok){ let m=res.statusText; try{ m=(await res.json()).detail||m; }catch(_){}
+      throw new Error(m); }
+    const {rubric,profile}=await res.json();
+    const {data,error}=await sb.from('graders').insert({user_id:SESSION.user.id,
+      name,task,rubric,examples,profile}).select().single();
+    if(error) throw new Error(error.message);
+    GRADERS.push(data); renderGraderBar(); setActive(data);
+    document.getElementById('builder').hidden=true;
+    document.getElementById('bExamples').innerHTML='';
+  }catch(e){ err.textContent="Couldn't learn the standard: "+e.message; }
+  finally{ btn.disabled=false; btn.textContent='Learn my standard'; }
+};
 
 // ---- alignment scorecard: pull the frozen eval report onto the page ----
 const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
@@ -554,14 +682,18 @@ async function run(){
     if(!text.trim()){ err.textContent='Paste an essay or load a sample first.'; return; }
     // if the box still holds the current sample verbatim, pass its id so we can
     // show the teacher's real mark next to the model's
-    const sid=(samples[cur] && text===samples[cur].text) ? samples[cur].essay_id : null;
+    const sid=(!ACTIVE && samples[cur] && text===samples[cur].text) ? samples[cur].essay_id : null;
     // frozen samples are free for everyone; a pasted essay hits the live model,
     // so it needs a Google sign-in (redirects and comes back with the draft kept)
     if(!sid && !(await ensureSignedIn(text))){ btn.textContent='signing in…'; return; }
     const headers={'Content-Type':'application/json'};
     if(SESSION&&SESSION.access_token) headers['Authorization']='Bearer '+SESSION.access_token;
-    const res=await fetch('/grade_own',{method:'POST',headers,
-      body:JSON.stringify({essay_text:text, essay_id:sid, threshold:0.6})});
+    const res=ACTIVE
+      ? await fetch('/grade_with',{method:'POST',headers,   // grade as YOUR grader
+          body:JSON.stringify({rubric:ACTIVE.rubric, profile:ACTIVE.profile,
+            examples:ACTIVE.examples, essay_text:text, threshold:0.6})})
+      : await fetch('/grade_own',{method:'POST',headers,
+          body:JSON.stringify({essay_text:text, essay_id:sid, threshold:0.6})});
     if(!res.ok){ // error body may not be JSON (proxy 502s etc.) — never show a parse error
       let msg=res.statusText;
       try{ msg=(await res.json()).detail||msg; }catch(_){}
