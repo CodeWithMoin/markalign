@@ -9,6 +9,10 @@ services:
         value: "0"           # real grading; set "1" for a free key-less demo
       - key: EDEXIA_DAILY_CAP
         value: "20"          # single-viewer link: bounded spend, resets daily
+      - key: SUPABASE_URL
+        sync: false          # with SUPABASE_ANON_KEY: Google sign-in gates live
+      - key: SUPABASE_ANON_KEY
+        sync: false          # paste-grading (samples stay public); unset = gate off
       - key: EDEXIA_MODEL
         value: gpt-5.6-luna
       - key: EDEXIA_PROVIDER_URL

@@ -188,4 +188,6 @@ The dataset is Kaggle-gated, so `training_set_rel3.tsv` isn't committed; a small
 
 Render: push to GitHub, "New Web Service", point at the repo. `render.yaml` is included; it starts in mock mode so the link is live immediately. Add `ANTHROPIC_API_KEY` and set `EDEXIA_MOCK=0` to grade for real.
 
+Optionally, set `SUPABASE_URL` and `SUPABASE_ANON_KEY` (a Supabase project with the Google provider enabled) to put live paste-grading behind Google sign-in with per-user rate limits — the preloaded samples stay public either way. Leave them unset and the gate is simply off.
+
 Or anywhere that runs a Procfile: `uvicorn backend.app:app --host 0.0.0.0 --port $PORT`.

@@ -59,13 +59,44 @@ _hits: dict[str, list[float]] = {}
 _day = {"date": "", "n": 0}
 
 
-def _guard_live_grade(req: Request, text: str) -> None:
-    """Raise 4xx before any model call: size, per-IP rate, global daily budget."""
+# ---- optional sign-in gate (Supabase + Google OAuth): the browser does the
+#      OAuth dance with supabase-js; the server only checks the bearer token
+#      against Supabase's auth API. Unset SUPABASE_URL → gate off (local dev,
+#      mock mode) and everything behaves as before. ----
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "").rstrip("/")
+SUPABASE_ANON_KEY = os.environ.get("SUPABASE_ANON_KEY", "")
+
+
+def _verify_user(req: Request) -> str | None:
+    """Return the signed-in user's id, or raise 401. None when the gate is off."""
+    if MOCK or not SUPABASE_URL:
+        return None
+    token = (req.headers.get("authorization") or "").removeprefix("Bearer ").strip()
+    if not token:
+        raise HTTPException(401, "sign in with Google to grade your own essay — "
+                                 "the preloaded sample essays need no account")
+    import urllib.request as _ur
+    r = _ur.Request(f"{SUPABASE_URL}/auth/v1/user",
+                    headers={"Authorization": f"Bearer {token}", "apikey": SUPABASE_ANON_KEY})
+    try:
+        with _ur.urlopen(r, timeout=10) as resp:
+            user = json.loads(resp.read())
+        if not user.get("id"):
+            raise ValueError("no user id")
+        return user["id"]
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(401, "your sign-in expired — sign in again to grade your own essay")
+
+
+def _guard_live_grade(req: Request, text: str, key: str | None = None) -> None:
+    """Raise 4xx before any model call: size, per-user/IP rate, global daily budget."""
     if len(text) > MAX_ESSAY_CHARS:
         raise HTTPException(413, f"essay too long ({len(text)} chars; limit {MAX_ESSAY_CHARS})")
     if MOCK:
         return                               # mock grading is free — no limits
-    ip = (req.headers.get("x-forwarded-for") or (req.client.host if req.client else "?")).split(",")[0].strip()
+    ip = key or (req.headers.get("x-forwarded-for") or (req.client.host if req.client else "?")).split(",")[0].strip()
     now = time.time()
     recent = [t for t in _hits.get(ip, []) if now - t < RATE_WINDOW]
     if len(recent) >= RATE_LIMIT:
@@ -198,7 +229,10 @@ def grade_own(req: OwnGrade, request: Request):
     is_sample = req.essay_id is not None and human is not None
     if is_sample and req.essay_id in _GRADES:
         return {"result": _GRADES[req.essay_id], "human_holistic": human}
-    _guard_live_grade(request, req.essay_text)   # only grades that reach the model
+    # live grading costs money: require sign-in (when configured) and rate-limit
+    # per user rather than per IP; frozen samples above stay open to everyone
+    user = _verify_user(request)
+    _guard_live_grade(request, req.essay_text, key=user)
     prof = _demo_profile()
     essay = Essay(essay_id=req.essay_id or "live", set_id=DEMO_RUBRIC.set_id, text=req.essay_text)
     try:
@@ -255,5 +289,9 @@ def llms_txt():
 @app.get("/", response_class=HTMLResponse)
 def index():
     # stamp the task into the HTML so the banner renders in the first paint
-    # instead of popping in after the /demo fetch
-    return (ROOT / "frontend" / "index.html").read_text().replace("{{TASK}}", DEMO_RUBRIC.prompt)
+    # instead of popping in after the /demo fetch; auth config is public by design
+    # (Supabase anon keys are meant for browsers) and empty when the gate is off
+    return ((ROOT / "frontend" / "index.html").read_text()
+            .replace("{{TASK}}", DEMO_RUBRIC.prompt)
+            .replace("{{SB_URL}}", "" if MOCK else SUPABASE_URL)
+            .replace("{{SB_KEY}}", "" if MOCK else SUPABASE_ANON_KEY))

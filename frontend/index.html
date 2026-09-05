@@ -348,6 +348,7 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 // ---- entrance: one orchestrated timeline — headline settles, then the work
 //      surface arrives; the CSS highlighter draw on the em lands mid-sequence ----
@@ -418,6 +419,47 @@ fetch('/health').then(r=>r.json()).then(h=>{
   document.getElementById('mode').textContent =
     h.mock ? "demo grader · no API key" : "live model grading";
 }).catch(()=>{ document.getElementById('mode').textContent="backend offline"; });
+
+// ---- sign-in gate (Google via Supabase): samples are free for everyone; grading
+//      YOUR OWN essay is the part that costs money, so that's what needs an account.
+//      Config is server-stamped; when it's absent the gate is simply off. ----
+const SB_URL='{{SB_URL}}', SB_KEY='{{SB_KEY}}';
+const sb=(SB_URL.startsWith('http')&&window.supabase)?window.supabase.createClient(SB_URL,SB_KEY):null;
+let SESSION=null;
+
+function renderAuth(){
+  const el=document.getElementById('mode');
+  if(!sb||!SESSION) return;
+  const email=(SESSION.user&&SESSION.user.email)||'signed in';
+  el.innerHTML=`live model grading · ${email} <a href="#" id="signout" style="font-weight:600">sign out</a>`;
+  document.getElementById('signout').onclick=async e=>{
+    e.preventDefault(); await sb.auth.signOut(); SESSION=null;
+    el.textContent='live model grading';
+  };
+}
+if(sb){
+  sb.auth.getSession().then(({data})=>{ SESSION=data.session; renderAuth();
+    // returning from the OAuth redirect: restore the essay the visitor had typed
+    try{
+      const draft=localStorage.getItem('markalign-draft');
+      if(draft&&SESSION){ const t=document.getElementById('essay');
+        if(!t.value){ t.value=draft; autogrow(t); } localStorage.removeItem('markalign-draft');
+        run(); }   // they were mid-grade when we sent them to Google — finish the job
+    }catch(_){}
+  });
+  sb.auth.onAuthStateChange((_e,s)=>{ SESSION=s; renderAuth(); });
+}
+
+async function ensureSignedIn(text){
+  // true = good to go; false = redirecting to Google (we saved the draft first)
+  if(!sb) return true;
+  const {data}=await sb.auth.getSession(); SESSION=data.session;
+  if(SESSION) return true;
+  try{ localStorage.setItem('markalign-draft', text); }catch(_){}
+  await sb.auth.signInWithOAuth({provider:'google',
+    options:{redirectTo:location.origin+location.pathname}});
+  return false;
+}
 
 // ---- alignment scorecard: pull the frozen eval report onto the page ----
 const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
@@ -513,7 +555,12 @@ async function run(){
     // if the box still holds the current sample verbatim, pass its id so we can
     // show the teacher's real mark next to the model's
     const sid=(samples[cur] && text===samples[cur].text) ? samples[cur].essay_id : null;
-    const res=await fetch('/grade_own',{method:'POST',headers:{'Content-Type':'application/json'},
+    // frozen samples are free for everyone; a pasted essay hits the live model,
+    // so it needs a Google sign-in (redirects and comes back with the draft kept)
+    if(!sid && !(await ensureSignedIn(text))){ btn.textContent='signing in…'; return; }
+    const headers={'Content-Type':'application/json'};
+    if(SESSION&&SESSION.access_token) headers['Authorization']='Bearer '+SESSION.access_token;
+    const res=await fetch('/grade_own',{method:'POST',headers,
       body:JSON.stringify({essay_text:text, essay_id:sid, threshold:0.6})});
     if(!res.ok){ // error body may not be JSON (proxy 502s etc.) — never show a parse error
       let msg=res.statusText;
