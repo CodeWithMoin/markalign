@@ -17,9 +17,13 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
-          curl -fsS -o /dev/null -w "HTTP %{http_code}\n" \
-            -H "apikey: $SUPABASE_ANON_KEY" -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
-            "${SUPABASE_URL%/}/rest/v1/"
+          h=(-H "apikey: $SUPABASE_ANON_KEY" -H "Authorization: Bearer $SUPABASE_ANON_KEY")
+          # 1) key check: auth settings is readable with any valid anon key
+          curl -fsS -o /dev/null -w "auth HTTP %{http_code}\n" "${h[@]}" "${SUPABASE_URL%/}/auth/v1/settings"
+          # 2) activity: hit PostgREST; anon can't read the root, a 404 for a missing table is fine
+          code=$(curl -sS -o /dev/null -w "%{http_code}" "${h[@]}" "${SUPABASE_URL%/}/rest/v1/keepalive?select=*")
+          echo "rest HTTP $code"
+          [ "$code" != 401 ] && [ "$code" -lt 500 ]
       - name: Keep this schedule from being auto-disabled
         run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/supabase-keepalive.yml/enable"
         env:
