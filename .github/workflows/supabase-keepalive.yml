@@ -18,10 +18,11 @@ jobs:
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
           h=(-H "apikey: $SUPABASE_ANON_KEY" -H "Authorization: Bearer $SUPABASE_ANON_KEY")
+          retry=(--retry 5 --retry-delay 2 --retry-all-errors --connect-timeout 10 --max-time 30)
           # 1) key check: auth settings is readable with any valid anon key
-          curl -fsS -o /dev/null -w "auth HTTP %{http_code}\n" "${h[@]}" "${SUPABASE_URL%/}/auth/v1/settings"
+          curl -fsS "${retry[@]}" -o /dev/null -w "auth HTTP %{http_code}\n" "${h[@]}" "${SUPABASE_URL%/}/auth/v1/settings"
           # 2) activity: hit PostgREST; anon can't read the root, a 404 for a missing table is fine
-          code=$(curl -sS -o /dev/null -w "%{http_code}" "${h[@]}" "${SUPABASE_URL%/}/rest/v1/keepalive?select=*")
+          code=$(curl -sS "${retry[@]}" -o /dev/null -w "%{http_code}" "${h[@]}" "${SUPABASE_URL%/}/rest/v1/keepalive?select=*")
           echo "rest HTTP $code"
           [ "$code" != 401 ] && [ "$code" -lt 500 ]
       - name: Keep this schedule from being auto-disabled
