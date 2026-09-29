@@ -15,14 +15,34 @@ jobs:
       - name: Ping Supabase REST API
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
+          set -euo pipefail
+          : "${SUPABASE_ANON_KEY:?SUPABASE_ANON_KEY secret is required}"
+          if [ -n "${SUPABASE_PROJECT_REF:-}" ]; then
+            base_url="https://${SUPABASE_PROJECT_REF}.supabase.co"
+          else
+            : "${SUPABASE_URL:?SUPABASE_URL secret is required when SUPABASE_PROJECT_REF is unset}"
+            base_url="${SUPABASE_URL%/}"
+          fi
+          host="${base_url#https://}"
+          host="${host#http://}"
+          host="${host%%/*}"
+          for attempt in 1 2 3; do
+            if getent hosts "$host" >/dev/null; then
+              break
+            fi
+            [ "$attempt" -lt 3 ] || { echo "::error::Could not resolve $host. Check SUPABASE_URL / SUPABASE_PROJECT_REF secret."; exit 1; }
+            echo "DNS lookup for $host failed (attempt $attempt/3); retrying in 10s..."
+            sleep 10
+          done
           h=(-H "apikey: $SUPABASE_ANON_KEY" -H "Authorization: Bearer $SUPABASE_ANON_KEY")
-          retry=(--retry 5 --retry-delay 2 --retry-all-errors --connect-timeout 10 --max-time 30)
+          retry=(--retry 8 --retry-delay 4 --retry-all-errors --connect-timeout 10 --max-time 45)
           # 1) key check: auth settings is readable with any valid anon key
-          curl -fsS "${retry[@]}" -o /dev/null -w "auth HTTP %{http_code}\n" "${h[@]}" "${SUPABASE_URL%/}/auth/v1/settings"
+          curl -fsS "${retry[@]}" -o /dev/null -w "auth HTTP %{http_code}\n" "${h[@]}" "${base_url}/auth/v1/settings"
           # 2) activity: hit PostgREST; anon can't read the root, a 404 for a missing table is fine
-          code=$(curl -sS "${retry[@]}" -o /dev/null -w "%{http_code}" "${h[@]}" "${SUPABASE_URL%/}/rest/v1/keepalive?select=*")
+          code=$(curl -sS "${retry[@]}" -o /dev/null -w "%{http_code}" "${h[@]}" "${base_url}/rest/v1/keepalive?select=*")
           echo "rest HTTP $code"
           [ "$code" != 401 ] && [ "$code" -lt 500 ]
       - name: Keep this schedule from being auto-disabled
